@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+*.pyc
+__pycache__/
+.env
+.env.local
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.key
+*.pem
+kubeconfig
+secrets.yaml
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+coverage/
+.coverage
+*.coverage
+.pytest_cache/
