@@ -1,0 +1,14 @@
+FROM ollama/ollama:latest
+
+# Pré-charger les modèles (optionnel, augmente la taille de l'image)
+# RUN ollama pull mistral && \
+#     ollama pull llama3 && \
+#     ollama pull codellama
+
+# Configuration
+ENV OLLAMA_HOST=0.0.0.0
+ENV OLLAMA_MODELS_PATH=/root/.ollama/models
+
+EXPOSE 11434
+
+CMD ["serve"]
