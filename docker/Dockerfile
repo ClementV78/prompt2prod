@@ -10,6 +10,11 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 # Stage final
 FROM python:3.11-slim
 
+# Labels pour GHCR
+LABEL org.opencontainers.image.source=https://github.com/xclem/poc-openhands
+LABEL org.opencontainers.image.description="POC OpenHands - Prompt to Production Pipeline"
+LABEL org.opencontainers.image.licenses=MIT
+
 WORKDIR /app
 
 # Copier les dépendances depuis le builder

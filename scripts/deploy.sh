@@ -14,12 +14,12 @@ fi
 
 # Deploy all components
 echo "🤖 Deploying components..."
-kubectl apply -f k8s/base/openhands-deployment.yaml
+kubectl apply -f k8s/base/
 
 # Wait for pods to be ready
 echo "⏳ Waiting for pods to start..."
 kubectl wait --for=condition=Ready pod -l app=ollama -n $NAMESPACE --timeout=300s || true
-kubectl wait --for=condition=Ready pod -l app=openhands -n $NAMESPACE --timeout=300s || true
+kubectl wait --for=condition=Ready pod -l app=app -n $NAMESPACE --timeout=300s || true
 
 # Show status
 echo "✅ Deployment complete in namespace: $NAMESPACE"

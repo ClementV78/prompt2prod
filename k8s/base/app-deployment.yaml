@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: app
-        image: ${IMAGE_TAG}
+        image: poc-openhands:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 8000
           name: http
