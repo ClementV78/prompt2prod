@@ -1,39 +1,36 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Déploiement sur K3s..."
+NAMESPACE="poc-openhands"
 
-# Vérifier la connexion au cluster
+echo "🚀 Deploying to K3s in namespace: $NAMESPACE"
+
+# Check cluster connection
 if ! kubectl cluster-info &> /dev/null; then
-    echo "❌ Impossible de se connecter au cluster K3s"
-    echo "Lancez d'abord: ./scripts/setup-k3s.sh"
+    echo "❌ Cannot connect to K3s cluster"
+    echo "Run first: ./scripts/setup-k3s.sh"
     exit 1
 fi
 
-# Créer un namespace pour le POC
-kubectl create namespace poc-openhands
+# Deploy all components
+echo "🤖 Deploying components..."
+kubectl apply -f k8s/base/openhands-deployment.yaml
 
-# Déployer Ollama
-echo "🤖 Déploiement d'Ollama..."
-kubectl apply -f k8s/base/ollama-deployment.yaml -n poc-openhands
+# Wait for pods to be ready
+echo "⏳ Waiting for pods to start..."
+kubectl wait --for=condition=Ready pod -l app=ollama -n $NAMESPACE --timeout=300s || true
+kubectl wait --for=condition=Ready pod -l app=openhands -n $NAMESPACE --timeout=300s || true
 
-# Déployer KGateway routes
-echo "🌐 Configuration de KGateway..."
-kubectl apply -f k8s/base/kgateway-routes.yaml -n poc-openhands
-
-# Déployer l'application (si elle existe)
-if [ -f "k8s/base/app-deployment.yaml" ]; then
-    echo "📦 Déploiement de l'application..."
-    kubectl apply -f k8s/base/app-deployment.yaml -n poc-openhands
-fi
-
-# Attendre que les pods soient prêts
-echo "⏳ Attente du démarrage des pods..."
-kubectl wait --for=condition=Ready pod -l app=ollama -n poc-openhands --timeout=300s || true
-
-echo "✅ Déploiement terminé"
+# Show status
+echo "✅ Deployment complete in namespace: $NAMESPACE"
 echo ""
-kubectl get pods
+echo "📊 Status:"
+kubectl get pods -n $NAMESPACE
 echo ""
-echo "💡 Pour voir les logs:"
-echo "   kubectl logs -f deployment/ollama"
+echo "💡 To access Ollama:"
+echo "   kubectl port-forward svc/ollama 11434:11434 -n $NAMESPACE"
+echo "   curl http://localhost:11434/api/tags"
+echo ""
+echo "💡 To access OpenHands UI:"
+echo "   kubectl port-forward svc/openhands 8080:8080 -n $NAMESPACE"
+echo "   Then open http://localhost:8080 in your browser"

@@ -2,66 +2,43 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: kgateway
-  namespace: default
 spec:
-  gatewayClassName: kong
+  gatewayClassName: kgateway
   listeners:
-  - name: http
-    protocol: HTTP
-    port: 8080
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: llm-router
-  namespace: default
 spec:
   parentRefs:
-  - name: kgateway
-    namespace: default
+    - name: kgateway
   rules:
-  # Route vers Ollama pour mode local
-  - matches:
-    - headers:
-      - name: x-llm-mode
-        value: local
-    - path:
-        type: PathPrefix
-        value: /v1/chat
-    backendRefs:
-    - name: ollama
-      port: 11434
-  
-  # Route vers OpenRouter pour mode cloud
-  - matches:
-    - headers:
-      - name: x-llm-mode
-        value: cloud
-    - path:
-        type: PathPrefix
-        value: /v1/chat
-    filters:
-    - type: RequestHeaderModifier
-      requestHeaderModifier:
-        set:
-        - name: Authorization
-          value: "Bearer ${OPENROUTER_API_KEY}"
-    - type: URLRewrite
-      urlRewrite:
-        hostname: openrouter.ai
-        path:
-          type: ReplacePrefixMatch
-          replacePrefixMatch: /api/v1/chat/completions
-    backendRefs:
-    - kind: Service
-      name: openrouter-proxy
-      port: 443
-  
-  # Route par défaut vers Ollama (local first)
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /v1
-    backendRefs:
-    - name: ollama
-      port: 11434
+    # Route vers Ollama pour mode local
+    - matches:
+        - headers:
+            - name: x-llm-mode
+              value: local
+      backendRefs:
+        - name: ollama
+          port: 11434
+
+    # Route vers OpenRouter pour mode cloud (sans URLRewrite)
+    - matches:
+        - headers:
+            - name: x-llm-mode
+              value: cloud
+      backendRefs:
+        - name: openrouter-proxy
+          port: 443
+
+    # Route par défaut vers Ollama
+    - backendRefs:
+        - name: ollama
+          port: 11434
