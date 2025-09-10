@@ -8,7 +8,19 @@ import httpx
 import os
 from typing import Optional
 
-app = FastAPI(title="Prompt2Prod API", version="1.0.0")
+app = FastAPI(
+    title="Prompt2Prod API",
+    description="🚀 API pour la génération de code via modèles IA locaux et cloud",
+    version="1.0.0",
+    contact={
+        "name": "Prompt2Prod",
+        "url": "https://github.com/ClementV78/prompt2prod",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://github.com/ClementV78/prompt2prod/blob/main/LICENSE",
+    },
+)
 
 # CORS pour development
 app.add_middleware(
@@ -23,27 +35,65 @@ LLM_ENDPOINT = os.getenv("LLM_ENDPOINT", "http://localhost:8080/v1/chat")
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 
 class PromptRequest(BaseModel):
-    prompt: str
-    model: Optional[str] = "mistral"
+    prompt: str = "Create a Python hello world script"
+    model: Optional[str] = "llama3.2:1b"
     mode: Optional[str] = "local"  # local ou cloud
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "prompt": "Create a Python FastAPI hello world endpoint",
+                "model": "llama3.2:1b",
+                "mode": "local"
+            }
+        }
 
 class PromptResponse(BaseModel):
     response: str
     model: str
     mode: str
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "response": "# Python Hello World\nprint('Hello World!')",
+                "model": "llama3.2:1b",
+                "mode": "local"
+            }
+        }
 
-@app.get("/")
+@app.get("/", tags=["Status"])
 async def root():
+    """
+    🏠 **Point d'entrée de l'API**
+    
+    Retourne le statut général de l'API Prompt2Prod
+    """
     return {"message": "Prompt2Prod API", "status": "running"}
 
-@app.get("/health")
+@app.get("/health", tags=["Status"])
 async def health():
+    """
+    ❤️ **Vérification de santé**
+    
+    Endpoint pour les health checks Kubernetes
+    """
     return {"status": "healthy"}
 
-@app.post("/generate", response_model=PromptResponse)
+@app.post("/generate", response_model=PromptResponse, tags=["Code Generation"])
 async def generate(request: PromptRequest):
     """
-    Génère une réponse via LLM (local ou cloud)
+    🚀 **Génération de code via IA**
+    
+    Génère du code à partir d'un prompt en langage naturel.
+    
+    **Modes disponibles :**
+    - `local` : Utilise Ollama (modèles locaux)
+    - `cloud` : Utilise OpenRouter (modèles cloud)
+    
+    **Modèles disponibles :**
+    - `llama3.2:1b` : Léger et rapide (recommandé pour tests)
+    - `mistral:7b-instruct` : Plus puissant, temps de réponse ~30-60s
     """
     try:
         headers = {
@@ -57,7 +107,7 @@ async def generate(request: PromptRequest):
             "stream": False
         }
         
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:
             if request.mode == "local":
                 # Appel direct à Ollama
                 response = await client.post(
@@ -86,10 +136,13 @@ async def generate(request: PromptRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/models")
+@app.get("/models", tags=["Models"])
 async def list_models():
     """
-    Liste les modèles disponibles
+    📋 **Liste des modèles disponibles**
+    
+    Récupère la liste des modèles IA disponibles sur Ollama local.
+    Utile pour connaître les modèles installés avant d'utiliser `/generate`
     """
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:

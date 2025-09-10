@@ -65,7 +65,7 @@ This **Prompt2Prod POC** showcases modern DevOps practices through AI-driven pro
 - Demonstrates modern API gateway patterns vs traditional reverse proxies
 
 **3. Multi-LLM Architecture**:
-- **Ollama** (local): Resource-efficient local inference (Llama3, Mistral, CodeLlama)
+- **Ollama** (local): Resource-efficient local inference (llama3.2:1b, phi3:mini, mistral:7b-instruct)
 - **OpenRouter** (cloud): High-capability models for complex reasoning
 - Dynamic model selection based on task complexity and requirements
 - Fallback strategies and cost optimization patterns

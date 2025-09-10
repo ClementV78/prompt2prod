@@ -64,7 +64,7 @@ prompt2prod/
 ### Stack technologique
 
 - **API**: FastAPI avec validation Pydantic
-- **IA**: Ollama local (Llama3.2, Mistral, CodeLlama)
+- **IA**: Ollama local (Llama3.2:1b, phi3:mini, mistral:7b-instruct) + Cloud (OpenRouter)
 - **Orchestration**: Kubernetes avec K3s
 - **Routage**: KGateway (CNCF Gateway API)
 - **CI/CD**: GitHub Actions + GHCR
@@ -73,9 +73,9 @@ prompt2prod/
 ### Architecture
 
 ```
-User → FastAPI → Ollama → Generated Code
-  ↓
-GitHub Actions → GHCR → Kubernetes
+User → FastAPI → KGateway → [Local: Ollama | Cloud: OpenRouter] → Generated Code
+                    ↓ (x-llm-mode header routing)
+           [llama3.2:1b, phi3:mini, mistral:7b] | [GPT, Claude, etc.]
 ```
 
 ### Composants déployés
@@ -138,13 +138,22 @@ kubectl logs -f deployment/app
 ## ⚡ Exemple d'utilisation
 
 ```bash
-# Génération simple
+# Génération avec modèle local (recommandé: phi3:mini)
 curl -X POST "http://localhost:8080/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "Create a Python FastAPI hello world",
-    "model": "llama3.2:1b", 
+    "model": "phi3:mini", 
     "mode": "local"
+  }'
+
+# Génération avec modèle cloud (OpenRouter)
+curl -X POST "http://localhost:8080/generate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Create a complex microservice architecture",
+    "model": "gpt-4", 
+    "mode": "cloud"
   }'
 
 # Interface Swagger
