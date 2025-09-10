@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: app
-        image: poc-openhands:latest
-        imagePullPolicy: Never
+        image: ghcr.io/clementv78/poc-openhands:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
           name: http
