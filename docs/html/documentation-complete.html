@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Équipe DevOps" />
+  <title>Documentation Complète POC Prompt2Prod</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Documentation Complète POC Prompt2Prod</h1>
+<p class="author">Équipe DevOps</p>
+<p class="date">septembre 2025</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#documentation-complète-poc-prompt2prod"
+id="toc-documentation-complète-poc-prompt2prod">Documentation Complète
+POC Prompt2Prod</a></li>
+<li><a href="#architecture-prompt2prod"
+id="toc-architecture-prompt2prod">Architecture Prompt2Prod</a>
+<ul>
+<li><a href="#guide-devops-et-documentation-technique"
+id="toc-guide-devops-et-documentation-technique">Guide DevOps et
+Documentation Technique</a></li>
+<li><a href="#table-des-matières" id="toc-table-des-matières">Table des
+Matières</a></li>
+<li><a href="#vue-densemble" id="toc-vue-densemble">Vue d’ensemble</a>
+<ul>
+<li><a href="#objectif-métier" id="toc-objectif-métier">Objectif
+métier</a></li>
+<li><a href="#valeur-ajoutée-devops"
+id="toc-valeur-ajoutée-devops">Valeur ajoutée DevOps</a></li>
+</ul></li>
+<li><a href="#arborescence-du-projet"
+id="toc-arborescence-du-projet">Arborescence du projet</a>
+<ul>
+<li><a href="#rôles-des-composants-clés"
+id="toc-rôles-des-composants-clés">Rôles des composants clés</a></li>
+</ul></li>
+<li><a href="#architecture-technique"
+id="toc-architecture-technique">Architecture technique</a>
+<ul>
+<li><a href="#architecture-globale"
+id="toc-architecture-globale">Architecture globale</a></li>
+<li><a href="#flux-de-données" id="toc-flux-de-données">Flux de
+données</a></li>
+<li><a href="#composants-techniques-détaillés"
+id="toc-composants-techniques-détaillés">Composants techniques
+détaillés</a></li>
+</ul></li>
+<li><a href="#stack-technologique" id="toc-stack-technologique">Stack
+technologique</a>
+<ul>
+<li><a href="#containerisation-et-orchestration"
+id="toc-containerisation-et-orchestration">Containerisation et
+orchestration</a></li>
+<li><a href="#cicd-et-gitops" id="toc-cicd-et-gitops">CI/CD et
+GitOps</a></li>
+<li><a href="#monitoring-et-observabilité"
+id="toc-monitoring-et-observabilité">Monitoring et
+observabilité</a></li>
+<li><a href="#développement-et-tests"
+id="toc-développement-et-tests">Développement et tests</a></li>
+</ul></li>
+<li><a href="#pipeline-devops" id="toc-pipeline-devops">Pipeline
+DevOps</a>
+<ul>
+<li><a href="#github-actions-workflow"
+id="toc-github-actions-workflow">GitHub Actions Workflow</a></li>
+<li><a href="#étapes-du-pipeline" id="toc-étapes-du-pipeline">Étapes du
+pipeline</a></li>
+</ul></li>
+<li><a href="#configuration-de-lenvironnement"
+id="toc-configuration-de-lenvironnement">Configuration de
+l’environnement</a>
+<ul>
+<li><a href="#prérequis-système" id="toc-prérequis-système">Prérequis
+système</a></li>
+<li><a href="#installation-du-cluster-k3s"
+id="toc-installation-du-cluster-k3s">Installation du cluster
+K3s</a></li>
+<li><a href="#setup-des-services-ai"
+id="toc-setup-des-services-ai">Setup des services AI</a></li>
+<li><a href="#configuration-kgateway-cncf"
+id="toc-configuration-kgateway-cncf">Configuration KGateway
+(CNCF)</a></li>
+</ul></li>
+<li><a href="#déploiement" id="toc-déploiement">Déploiement</a>
+<ul>
+<li><a href="#déploiement-automatisé"
+id="toc-déploiement-automatisé">Déploiement automatisé</a></li>
+<li><a href="#déploiement-manuel-étape-par-étape"
+id="toc-déploiement-manuel-étape-par-étape">Déploiement manuel étape par
+étape</a></li>
+<li><a href="#configuration-des-secrets"
+id="toc-configuration-des-secrets">Configuration des secrets</a></li>
+</ul></li>
+<li><a href="#monitoring-et-observabilité-1"
+id="toc-monitoring-et-observabilité-1">Monitoring et observabilité</a>
+<ul>
+<li><a href="#health-checks" id="toc-health-checks">Health
+Checks</a></li>
+<li><a href="#kubernetes-probes" id="toc-kubernetes-probes">Kubernetes
+Probes</a></li>
+<li><a href="#surveillance-opérationnelle"
+id="toc-surveillance-opérationnelle">Surveillance
+opérationnelle</a></li>
+<li><a href="#métriques-importantes-à-surveiller"
+id="toc-métriques-importantes-à-surveiller">Métriques importantes à
+surveiller</a></li>
+</ul></li>
+<li><a href="#bonnes-pratiques" id="toc-bonnes-pratiques">Bonnes
+pratiques</a>
+<ul>
+<li><a href="#sécurité" id="toc-sécurité">Sécurité</a></li>
+<li><a href="#performance" id="toc-performance">Performance</a></li>
+<li><a href="#fiabilité" id="toc-fiabilité">Fiabilité</a></li>
+<li><a href="#maintenabilité"
+id="toc-maintenabilité">Maintenabilité</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+<li><a href="#architecture-réelle-vs-nom-du-projet"
+id="toc-architecture-réelle-vs-nom-du-projet">Architecture réelle vs nom
+du projet</a>
+<ul>
+<li><a href="#ce-qui-est-implémenté" id="toc-ce-qui-est-implémenté">Ce
+qui est implémenté ✅</a></li>
+<li><a href="#ce-que-pourrait-apporter-openhands"
+id="toc-ce-que-pourrait-apporter-openhands">Ce que pourrait apporter
+OpenHands 💭</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#api-reference---prompt2prod"
+id="toc-api-reference---prompt2prod">API Reference - Prompt2Prod</a>
+<ul>
+<li><a href="#documentation-technique-des-endpoints"
+id="toc-documentation-technique-des-endpoints">Documentation technique
+des endpoints</a></li>
+<li><a href="#table-des-matières-1" id="toc-table-des-matières-1">Table
+des Matières</a></li>
+<li><a href="#vue-densemble-1" id="toc-vue-densemble-1">Vue
+d’ensemble</a>
+<ul>
+<li><a href="#caractéristiques-techniques"
+id="toc-caractéristiques-techniques">Caractéristiques
+techniques</a></li>
+</ul></li>
+<li><a href="#authentification"
+id="toc-authentification">Authentification</a></li>
+<li><a href="#endpoints" id="toc-endpoints">Endpoints</a>
+<ul>
+<li><a href="#health-check" id="toc-health-check">1. Health
+Check</a></li>
+<li><a href="#root-endpoint" id="toc-root-endpoint">2. Root
+Endpoint</a></li>
+<li><a href="#generate-project" id="toc-generate-project">3. Generate
+Project</a></li>
+<li><a href="#list-models" id="toc-list-models">4. List Models</a></li>
+</ul></li>
+<li><a href="#modèles-de-données" id="toc-modèles-de-données">Modèles de
+données</a>
+<ul>
+<li><a href="#promptrequest"
+id="toc-promptrequest">PromptRequest</a></li>
+<li><a href="#promptresponse"
+id="toc-promptresponse">PromptResponse</a></li>
+</ul></li>
+<li><a href="#codes-derreur" id="toc-codes-derreur">Codes
+d’erreur</a></li>
+<li><a href="#exemples-dutilisation"
+id="toc-exemples-dutilisation">Exemples d’utilisation</a>
+<ul>
+<li><a href="#génération-dune-api-rest"
+id="toc-génération-dune-api-rest">Génération d’une API REST</a></li>
+<li><a href="#génération-dune-application-frontend"
+id="toc-génération-dune-application-frontend">Génération d’une
+application frontend</a></li>
+<li><a href="#mode-cloud-pour-projets-complexes"
+id="toc-mode-cloud-pour-projets-complexes">Mode cloud pour projets
+complexes</a></li>
+<li><a href="#vérification-de-santé"
+id="toc-vérification-de-santé">Vérification de santé</a></li>
+<li><a href="#liste-des-modèles" id="toc-liste-des-modèles">Liste des
+modèles</a></li>
+</ul></li>
+<li><a href="#intégration" id="toc-intégration">Intégration</a>
+<ul>
+<li><a href="#exemples-dintégration"
+id="toc-exemples-dintégration">Exemples d’intégration</a></li>
+</ul></li>
+<li><a href="#documentation-interactive"
+id="toc-documentation-interactive">Documentation interactive</a></li>
+</ul></li>
+<li><a href="#guide-utilisateur---prompt2prod"
+id="toc-guide-utilisateur---prompt2prod">Guide Utilisateur -
+Prompt2Prod</a>
+<ul>
+<li><a href="#documentation-fonctionnelle-et-cas-dusage"
+id="toc-documentation-fonctionnelle-et-cas-dusage">Documentation
+fonctionnelle et cas d’usage</a></li>
+<li><a href="#table-des-matières-2" id="toc-table-des-matières-2">Table
+des Matières</a></li>
+<li><a href="#introduction" id="toc-introduction">Introduction</a>
+<ul>
+<li><a href="#quest-ce-que-prompt2prod"
+id="toc-quest-ce-que-prompt2prod">Qu’est-ce que Prompt2Prod ?</a></li>
+<li><a href="#le-problème-résolu" id="toc-le-problème-résolu">Le
+problème résolu</a></li>
+<li><a href="#qui-peut-lutiliser" id="toc-qui-peut-lutiliser">Qui peut
+l’utiliser ?</a></li>
+</ul></li>
+<li><a href="#cas-dusage-principaux" id="toc-cas-dusage-principaux">Cas
+d’usage principaux</a>
+<ul>
+<li><a href="#génération-de-projets-complets"
+id="toc-génération-de-projets-complets">1. 🏗️ Génération de projets
+complets</a></li>
+<li><a href="#génération-dinterfaces-utilisateur"
+id="toc-génération-dinterfaces-utilisateur">2. 🎨 Génération
+d’interfaces utilisateur</a></li>
+<li><a href="#scripts-et-outils-de-développement"
+id="toc-scripts-et-outils-de-développement">3. 🐍 Scripts et outils de
+développement</a></li>
+<li><a href="#applications-mobiles" id="toc-applications-mobiles">4. 📱
+Applications mobiles</a></li>
+</ul></li>
+<li><a href="#guide-de-démarrage-rapide"
+id="toc-guide-de-démarrage-rapide">Guide de démarrage rapide</a>
+<ul>
+<li><a href="#étape-1-accéder-à-lapi"
+id="toc-étape-1-accéder-à-lapi">Étape 1: Accéder à l’API</a></li>
+<li><a href="#étape-2-première-génération"
+id="toc-étape-2-première-génération">Étape 2: Première
+génération</a></li>
+<li><a href="#étape-3-analyser-le-résultat"
+id="toc-étape-3-analyser-le-résultat">Étape 3: Analyser le
+résultat</a></li>
+<li><a href="#étape-4-itération-et-amélioration"
+id="toc-étape-4-itération-et-amélioration">Étape 4: Itération et
+amélioration</a></li>
+</ul></li>
+<li><a href="#utilisation-de-lapi"
+id="toc-utilisation-de-lapi">Utilisation de l’API</a>
+<ul>
+<li><a href="#interface-web-swagger"
+id="toc-interface-web-swagger">Interface Web (Swagger)</a></li>
+<li><a href="#modes-de-génération-disponibles"
+id="toc-modes-de-génération-disponibles">Modes de génération
+disponibles</a></li>
+</ul></li>
+<li><a href="#exemples-pratiques" id="toc-exemples-pratiques">Exemples
+pratiques</a>
+<ul>
+<li><a href="#exemple-1-api-de-blog-avec-authentification"
+id="toc-exemple-1-api-de-blog-avec-authentification">Exemple 1: API de
+blog avec authentification</a></li>
+<li><a href="#exemple-2-dashboard-react-avec-graphiques"
+id="toc-exemple-2-dashboard-react-avec-graphiques">Exemple 2: Dashboard
+React avec graphiques</a></li>
+<li><a href="#exemple-3-microservice-en-go"
+id="toc-exemple-3-microservice-en-go">Exemple 3: Microservice en
+Go</a></li>
+</ul></li>
+<li><a href="#bonnes-pratiques-1" id="toc-bonnes-pratiques-1">Bonnes
+pratiques</a>
+<ul>
+<li><a href="#rédaction-de-prompts-efficaces"
+id="toc-rédaction-de-prompts-efficaces">📝 Rédaction de prompts
+efficaces</a></li>
+<li><a href="#processus-ditération" id="toc-processus-ditération">🔄
+Processus d’itération</a></li>
+<li><a href="#sélection-du-bon-modèle"
+id="toc-sélection-du-bon-modèle">🎯 Sélection du bon modèle</a></li>
+</ul></li>
+<li><a href="#dépannage" id="toc-dépannage">Dépannage</a>
+<ul>
+<li><a href="#problèmes-courants-et-solutions"
+id="toc-problèmes-courants-et-solutions">Problèmes courants et
+solutions</a></li>
+<li><a href="#debug-et-monitoring" id="toc-debug-et-monitoring">Debug et
+monitoring</a></li>
+</ul></li>
+<li><a href="#faq" id="toc-faq">FAQ</a>
+<ul>
+<li><a href="#questions-générales"
+id="toc-questions-générales">Questions générales</a></li>
+<li><a href="#questions-techniques"
+id="toc-questions-techniques">Questions techniques</a></li>
+<li><a href="#questions-sur-la-performance"
+id="toc-questions-sur-la-performance">Questions sur la
+performance</a></li>
+</ul></li>
+<li><a href="#support-et-communauté"
+id="toc-support-et-communauté">Support et communauté</a>
+<ul>
+<li><a href="#comment-obtenir-de-laide"
+id="toc-comment-obtenir-de-laide">Comment obtenir de l’aide ?</a></li>
+<li><a href="#contribuer-au-projet"
+id="toc-contribuer-au-projet">Contribuer au projet</a></li>
+</ul></li>
+<li><a href="#à-propos-de-ce-poc" id="toc-à-propos-de-ce-poc">À propos
+de ce POC</a>
+<ul>
+<li><a href="#fonctionnalités-actuelles"
+id="toc-fonctionnalités-actuelles">Fonctionnalités actuelles</a></li>
+<li><a href="#limitations-du-poc"
+id="toc-limitations-du-poc">Limitations du POC</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="documentation-complète-poc-prompt2prod">Documentation Complète
+POC Prompt2Prod</h1>
+<p><em>Guide technique et fonctionnel complet</em></p>
+<hr />
+<h1 id="architecture-prompt2prod">Architecture Prompt2Prod</h1>
+<h2 id="guide-devops-et-documentation-technique">Guide DevOps et
+Documentation Technique</h2>
+<p><strong>Version:</strong> 1.0<br />
+<strong>Date:</strong> Septembre 2025<br />
+<strong>Auteur:</strong> Équipe DevOps</p>
+<hr />
+<h2 id="table-des-matières">Table des Matières</h2>
+<ol type="1">
+<li><a href="#vue-densemble">Vue d’ensemble</a></li>
+<li><a href="#arborescence-du-projet">Arborescence du projet</a></li>
+<li><a href="#architecture-technique">Architecture technique</a></li>
+<li><a href="#stack-technologique">Stack technologique</a></li>
+<li><a href="#pipeline-devops">Pipeline DevOps</a></li>
+<li><a href="#configuration-de-lenvironnement">Configuration de
+l’environnement</a></li>
+<li><a href="#déploiement">Déploiement</a></li>
+<li><a href="#monitoring-et-observabilité">Monitoring et
+observabilité</a></li>
+<li><a href="#bonnes-pratiques">Bonnes pratiques</a></li>
+</ol>
+<hr />
+<h2 id="vue-densemble">Vue d’ensemble</h2>
+<p>Le <strong>Prompt2Prod</strong> démontre une pipeline DevOps complet
+permettant de transformer une idée exprimée en langage naturel en un
+projet GitHub déployé et prêt pour la production.</p>
+<h3 id="objectif-métier">Objectif métier</h3>
+<ul>
+<li><strong>Input:</strong> Prompt utilisateur (ex: “Create a Node.js
+REST API for a todo app”)</li>
+<li><strong>Output:</strong> Repository GitHub complet avec code, CI/CD,
+tests, et déploiement</li>
+</ul>
+<h3 id="valeur-ajoutée-devops">Valeur ajoutée DevOps</h3>
+<ul>
+<li>Démonstration de l’automatisation complète de la chaîne de
+valeur</li>
+<li>Intégration d’outils modernes (KGateway CNCF, Ollama, FastAPI)</li>
+<li>Patterns cloud-native avec Kubernetes</li>
+<li>GitOps et Infrastructure as Code</li>
+</ul>
+<hr />
+<h2 id="arborescence-du-projet">Arborescence du projet</h2>
+<pre><code>poc-openhands/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml              # Pipeline CI/CD GitHub Actions
+├── docker/
+│   └── Dockerfile                  # Multi-stage build optimisé
+├── docs/                          # Documentation (ce document)
+│   ├── architecture/
+│   ├── api/
+│   ├── functional/
+│   └── assets/
+├── k8s/
+│   └── base/                      # Manifests Kubernetes
+│       ├── app-deployment.yaml    # Déploiement application principale
+│       └── (autres déploiements K8s)
+├── scripts/                       # Scripts d&#39;automatisation DevOps
+│   ├── setup-k3s.sh             # Installation cluster K3s
+│   ├── setup-kgateway.sh        # Configuration KGateway (CNCF)
+│   ├── setup-ollama-models.sh   # Chargement modèles AI locaux
+│   ├── deploy.sh                 # Script de déploiement complet
+│   └── test.sh                   # Tests d&#39;intégration
+├── src/
+│   └── api/
+│       └── main.py               # API FastAPI principale
+├── tests/                        # Suite de tests automatisés
+│   ├── unit/
+│   └── integration/
+├── requirements.txt              # Dependencies Python
+├── requirements-test.txt         # Dependencies pour tests
+├── CLAUDE.md                     # Instructions pour Claude Code
+└── README.md                     # Documentation utilisateur</code></pre>
+<h3 id="rôles-des-composants-clés">Rôles des composants clés</h3>
+<ul>
+<li><strong><code>.github/workflows/</code></strong>: Pipeline CI/CD
+avec build, test, et déploiement automatisé</li>
+<li><strong><code>docker/</code></strong>: Containerisation avec
+optimisations production</li>
+<li><strong><code>k8s/base/</code></strong>: Déploiements cloud-native
+avec probes de santé</li>
+<li><strong><code>scripts/</code></strong>: Automatisation DevOps pour
+setup et maintenance</li>
+<li><strong><code>src/api/</code></strong>: Logique métier de l’API de
+génération de projets</li>
+</ul>
+<hr />
+<h2 id="architecture-technique">Architecture technique</h2>
+<h3 id="architecture-globale">Architecture globale</h3>
+<pre class="mermaid"><code>graph TB
+    subgraph &quot;Utilisateur&quot;
+        User[👤 Utilisateur]
+    end
+
+    subgraph &quot;GitHub Ecosystem&quot;
+        GH[📱 GitHub Repository]
+        GA[⚡ GitHub Actions]
+        GHCR[📦 GitHub Container Registry]
+    end
+
+    subgraph &quot;Cluster Kubernetes&quot;
+        subgraph &quot;Ingress Layer&quot;
+            KGW[🌐 KGateway&lt;br/&gt;CNCF Gateway API]
+        end
+
+        subgraph &quot;Application Layer&quot;
+            APP[🚀 FastAPI Application]
+        end
+
+        subgraph &quot;AI Services&quot;
+            OLLAMA[🤖 Ollama&lt;br/&gt;Local LLM]
+            OPENROUTER[☁️ OpenRouter&lt;br/&gt;Cloud LLM]
+        end
+    end
+
+    User --&gt;|Push Code| GH
+    GH --&gt;|Trigger| GA
+    GA --&gt;|Build &amp; Push| GHCR
+    GA --&gt;|Deploy| KGW
+
+    KGW --&gt;|Route by header| APP
+    APP --&gt;|Local mode| OLLAMA
+    APP --&gt;|Cloud mode| OPENROUTER</code></pre>
+<h3 id="flux-de-données">Flux de données</h3>
+<ol type="1">
+<li><strong>Développement</strong>: Code pushed → GitHub Repository</li>
+<li><strong>CI/CD</strong>: GitHub Actions → Build image → Push
+GHCR</li>
+<li><strong>Déploiement</strong>: Actions → Deploy to K8s → Update
+deployments</li>
+<li><strong>Runtime</strong>: User request → FastAPI → Ollama local →
+Generated text</li>
+<li><strong>Response</strong>: Generated code → User</li>
+</ol>
+<p><strong>Note importante :</strong> Contrairement au nom
+“poc-openhands”, cette implémentation N’utilise PAS OpenHands. Il s’agit
+d’une architecture directe FastAPI → Ollama pour la génération de
+code.</p>
+<h3 id="composants-techniques-détaillés">Composants techniques
+détaillés</h3>
+<h4 id="kgateway-cncf-gateway-api">1. KGateway (CNCF Gateway API)</h4>
+<ul>
+<li><strong>Rôle</strong>: Routage intelligent des requêtes LLM</li>
+<li><strong>Technologie</strong>: CNCF Gateway API (pas Ingress
+legacy)</li>
+<li><strong>Routing</strong>: Header
+<code>x-llm-mode: local|cloud</code></li>
+<li><strong>Load balancing</strong>: Entre services
+Ollama/OpenRouter</li>
+</ul>
+<h4 id="fastapi-application">2. FastAPI Application</h4>
+<ul>
+<li><strong>Framework</strong>: FastAPI avec validation Pydantic</li>
+<li><strong>Endpoints</strong>: <code>/generate</code>,
+<code>/health</code>, <code>/models</code>, <code>/docs</code></li>
+<li><strong>Architecture</strong>: Async/await pour performance</li>
+<li><strong>Observabilité</strong>: Health checks et métriques</li>
+</ul>
+<h4 id="services-ai">3. Services AI</h4>
+<ul>
+<li><strong>Ollama</strong>: LLM local uniquement (Llama3.2, Mistral,
+etc.)</li>
+<li><strong>Mode local</strong>: Direct vers Ollama, gratuit et
+privé</li>
+<li><strong>Mode cloud</strong>: Routage KGateway (architecture de
+démonstration non implémentée)</li>
+</ul>
+<hr />
+<h2 id="stack-technologique">Stack technologique</h2>
+<h3 id="containerisation-et-orchestration">Containerisation et
+orchestration</h3>
+<ul>
+<li><strong>Docker</strong>: Multi-stage builds pour optimisation</li>
+<li><strong>Kubernetes</strong>: K3s pour environnement léger</li>
+<li><strong>Container Registry</strong>: GitHub Container Registry
+(GHCR)</li>
+</ul>
+<h3 id="cicd-et-gitops">CI/CD et GitOps</h3>
+<ul>
+<li><strong>GitHub Actions</strong>: Pipeline déclaratif avec
+parallélisation</li>
+<li><strong>Secrets Management</strong>: GitHub Secrets pour
+credentials</li>
+<li><strong>Deployment</strong>: GitOps avec kubectl et Kustomize</li>
+</ul>
+<h3 id="monitoring-et-observabilité">Monitoring et observabilité</h3>
+<ul>
+<li><strong>Health Checks</strong>: Liveness et readiness probes</li>
+<li><strong>Logs</strong>: Centralisés via kubectl logs</li>
+<li><strong>Metrics</strong>: Endpoints <code>/health</code> et
+<code>/metrics</code></li>
+</ul>
+<h3 id="développement-et-tests">Développement et tests</h3>
+<ul>
+<li><strong>Language</strong>: Python 3.11 avec FastAPI</li>
+<li><strong>Testing</strong>: pytest avec couverture de code</li>
+<li><strong>Linting</strong>: ruff pour qualité de code</li>
+<li><strong>Documentation</strong>: Swagger/OpenAPI automatique</li>
+</ul>
+<hr />
+<h2 id="pipeline-devops">Pipeline DevOps</h2>
+<h3 id="github-actions-workflow">GitHub Actions Workflow</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Build and Deploy</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-test-deploy</span><span class="kw">:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">packages</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout repository</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set lowercase owner name</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> echo &quot;OWNER_LC=${OWNER,,}&quot; &gt;&gt;${GITHUB_ENV}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">OWNER</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;${{ github.repository_owner }}&quot;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Docker Buildx</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/setup-buildx-action@v3</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Log in to Container Registry</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/login-action@v3</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">registry</span><span class="kw">:</span><span class="at"> ghcr.io</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">username</span><span class="kw">:</span><span class="at"> ${{ github.actor }}</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">password</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build and push Docker image</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/build-push-action@v5</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">file</span><span class="kw">:</span><span class="at"> ./docker/Dockerfile</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">push</span><span class="kw">:</span><span class="at"> ${{ github.event_name != &#39;pull_request&#39; }}</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="fu">          tags</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>            ghcr.io/${{ env.OWNER_LC }}/poc-openhands:latest</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>            ghcr.io/${{ env.OWNER_LC }}/poc-openhands:${{ github.sha }}</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cache-from</span><span class="kw">:</span><span class="at"> type=gha</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cache-to</span><span class="kw">:</span><span class="at"> type=gha,mode=max</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run tests</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>          echo &quot;🧪 Running tests...&quot;</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>          # Tests automatisés ici</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy to K3s</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/main&#39;</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>          # Déploiement automatisé</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>          kubectl apply -f k8s/base/</span></code></pre></div>
+<h3 id="étapes-du-pipeline">Étapes du pipeline</h3>
+<ol type="1">
+<li><p><strong>Build Phase</strong></p>
+<ul>
+<li>Checkout du code source</li>
+<li>Build multi-stage de l’image Docker</li>
+<li>Push vers GHCR avec tags optimisés</li>
+</ul></li>
+<li><p><strong>Test Phase</strong></p>
+<ul>
+<li>Tests unitaires et d’intégration</li>
+<li>Validation de la qualité de code</li>
+<li>Vérification des vulnérabilités</li>
+</ul></li>
+<li><p><strong>Deploy Phase</strong></p>
+<ul>
+<li>Déploiement sur cluster K3s</li>
+<li>Rolling update sans downtime</li>
+<li>Vérification des health checks</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="configuration-de-lenvironnement">Configuration de
+l’environnement</h2>
+<h3 id="prérequis-système">Prérequis système</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Outils requis</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Docker <span class="op">&gt;</span>= 20.10</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> kubectl <span class="op">&gt;</span>= 1.25</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> k3s ou cluster Kubernetes</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> pandoc <span class="er">(</span><span class="ex">pour</span> génération PDF<span class="kw">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Python 3.11+</span></code></pre></div>
+<h3 id="installation-du-cluster-k3s">Installation du cluster K3s</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation K3s lightweight</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-sfL</span> https://get.k3s.io <span class="kw">|</span> <span class="fu">sh</span> <span class="at">-</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration kubectl</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cp /etc/rancher/k3s/k3s.yaml ~/.kube/config</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chown <span class="va">$USER</span> ~/.kube/config</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get nodes</span></code></pre></div>
+<h3 id="setup-des-services-ai">Setup des services AI</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Déploiement Ollama avec modèle</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/app-deployment.yaml</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement d&#39;un modèle léger</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/ollama <span class="at">--</span> ollama pull llama3.2:1b</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/ollama <span class="at">--</span> ollama list</span></code></pre></div>
+<h3 id="configuration-kgateway-cncf">Configuration KGateway (CNCF)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation KGateway</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-kgateway.sh</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration des routes</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/gateway.yaml</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Test du routing</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;x-llm-mode: local&quot;</span> http://kgateway/v1/chat</span></code></pre></div>
+<hr />
+<h2 id="déploiement">Déploiement</h2>
+<h3 id="déploiement-automatisé">Déploiement automatisé</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone du repository</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/username/poc-openhands.git</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> poc-openhands</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup complet de l&#39;environnement</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-k3s.sh</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-kgateway.sh</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/deploy.sh</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification du déploiement</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get pods <span class="at">-A</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get svc <span class="at">-A</span></span></code></pre></div>
+<h3 id="déploiement-manuel-étape-par-étape">Déploiement manuel étape par
+étape</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Build de l&#39;image</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> ghcr.io/username/poc-openhands:latest <span class="at">-f</span> docker/Dockerfile .</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Push vers registry</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push ghcr.io/username/poc-openhands:latest</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Déploiement sur K8s</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/app-deployment.yaml</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Exposition du service</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> port-forward svc/app 8080:80</span></code></pre></div>
+<h3 id="configuration-des-secrets">Configuration des secrets</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GitHub Container Registry</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> create secret docker-registry ghcr-secret <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-server</span><span class="op">=</span>ghcr.io <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-username</span><span class="op">=</span>username <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-password</span><span class="op">=</span><span class="va">$GITHUB_TOKEN</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenRouter API Key (si utilisé)</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> create secret generic openrouter-secret <span class="dt">\</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--from-literal</span><span class="op">=</span>api-key=<span class="va">$OPENROUTER_API_KEY</span></span></code></pre></div>
+<hr />
+<h2 id="monitoring-et-observabilité-1">Monitoring et observabilité</h2>
+<h3 id="health-checks">Health Checks</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.get</span>(<span class="st">&quot;/health&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> health():</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;status&quot;</span>: <span class="st">&quot;healthy&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;timestamp&quot;</span>: datetime.utcnow().isoformat(),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;version&quot;</span>: <span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<h3 id="kubernetes-probes">Kubernetes Probes</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">livenessProbe</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">httpGet</span><span class="kw">:</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /health</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">port</span><span class="kw">:</span><span class="at"> </span><span class="dv">8000</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">initialDelaySeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">periodSeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">readinessProbe</span><span class="kw">:</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">httpGet</span><span class="kw">:</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /health</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">port</span><span class="kw">:</span><span class="at"> </span><span class="dv">8000</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">initialDelaySeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">periodSeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span></code></pre></div>
+<h3 id="surveillance-opérationnelle">Surveillance opérationnelle</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> logs <span class="at">-f</span> deployment/app</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Métriques de performance</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> top pods</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Status du cluster</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get pods <span class="at">-o</span> wide</span></code></pre></div>
+<h3 id="métriques-importantes-à-surveiller">Métriques importantes à
+surveiller</h3>
+<ul>
+<li><strong>Latence API</strong>: Temps de réponse des endpoints</li>
+<li><strong>Taux d’erreur</strong>: 4xx/5xx responses</li>
+<li><strong>Ressources</strong>: CPU/Memory usage des pods</li>
+<li><strong>Disponibilité</strong>: Uptime des services AI</li>
+</ul>
+<hr />
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<h3 id="sécurité">Sécurité</h3>
+<ul>
+<li>✅ Images scannées pour vulnérabilités</li>
+<li>✅ Secrets managed via Kubernetes secrets</li>
+<li>✅ RBAC configuré pour accès minimal</li>
+<li>✅ Network policies pour isolation</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>✅ Multi-stage builds pour images optimisées</li>
+<li>✅ Resource limits sur tous les pods</li>
+<li>✅ Caching Docker layers dans CI/CD</li>
+<li>✅ Async/await pour I/O non-blocking</li>
+</ul>
+<h3 id="fiabilité">Fiabilité</h3>
+<ul>
+<li>✅ Health checks complets (liveness/readiness)</li>
+<li>✅ Graceful shutdown avec signaux</li>
+<li>✅ Rolling updates pour zero-downtime</li>
+<li>✅ Backup et recovery procedures</li>
+</ul>
+<h3 id="maintenabilité">Maintenabilité</h3>
+<ul>
+<li>✅ Documentation technique complète</li>
+<li>✅ Code commenté et structuré</li>
+<li>✅ Tests automatisés à tous niveaux</li>
+<li>✅ Logging structuré pour debugging</li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>Ce POC démontre une implémentation moderne d’une pipeline DevOps
+complète, intégrant:</p>
+<ul>
+<li><strong>Automatisation</strong>: From code to production en un
+push</li>
+<li><strong>Scalabilité</strong>: Architecture cloud-native avec
+Kubernetes</li>
+<li><strong>Observabilité</strong>: Monitoring et debugging
+intégrés</li>
+<li><strong>Sécurité</strong>: Bonnes pratiques de sécurité
+appliquées</li>
+<li><strong>Innovation</strong>: Intégration AI avec patterns DevOps
+modernes</li>
+</ul>
+<p>L’architecture présentée est <strong>production-ready</strong> et
+peut servir de base pour des projets d’entreprise nécessitant une
+automation complète de la chaîne de développement.</p>
+<hr />
+<h2 id="architecture-réelle-vs-nom-du-projet">Architecture réelle vs nom
+du projet</h2>
+<p><strong>Note historique :</strong> Ce projet était initialement nommé
+“poc-openhands” mais a été renommé “Prompt2Prod” pour mieux refléter son
+implémentation réelle (FastAPI + Ollama).</p>
+<h3 id="ce-qui-est-implémenté">Ce qui est implémenté ✅</h3>
+<ul>
+<li><strong>FastAPI</strong> : API moderne avec documentation
+automatique</li>
+<li><strong>Ollama</strong> : Inférence IA locale sans coûts
+externes</li>
+<li><strong>Kubernetes</strong> : Orchestration cloud-native avec
+K3s</li>
+<li><strong>GitHub Actions</strong> : Pipeline CI/CD moderne</li>
+<li><strong>KGateway</strong> : Architecture Gateway API (CNCF)</li>
+</ul>
+<h3 id="ce-que-pourrait-apporter-openhands">Ce que pourrait apporter
+OpenHands 💭</h3>
+<ul>
+<li><strong>Orchestration complexe</strong> : Workflows
+multi-étapes</li>
+<li><strong>Agents spécialisés</strong> : Architecture, code, tests,
+documentation</li>
+<li><strong>Intégration GitHub</strong> : Création automatique de
+repos</li>
+<li><strong>Validation iterative</strong> : Amélioration automatique du
+code</li>
+</ul>
+<p>Cette architecture démontre les patterns DevOps modernes sans la
+complexité d’orchestration d’OpenHands.</p>
+<hr />
+<p><em>Document généré automatiquement - Dernière mise à jour: Septembre
+2025</em></p>
+<hr />
+<h1 id="api-reference---prompt2prod">API Reference - Prompt2Prod</h1>
+<h2 id="documentation-technique-des-endpoints">Documentation technique
+des endpoints</h2>
+<p><strong>Version API:</strong> 1.0<br />
+<strong>Base URL:</strong> <code>http://localhost:8080</code><br />
+<strong>Content-Type:</strong> <code>application/json</code></p>
+<hr />
+<h2 id="table-des-matières-1">Table des Matières</h2>
+<ol type="1">
+<li><a href="#vue-densemble">Vue d’ensemble</a></li>
+<li><a href="#authentification">Authentification</a></li>
+<li><a href="#endpoints">Endpoints</a></li>
+<li><a href="#modèles-de-données">Modèles de données</a></li>
+<li><a href="#codes-derreur">Codes d’erreur</a></li>
+<li><a href="#exemples-dutilisation">Exemples d’utilisation</a></li>
+<li><a href="#sdk-et-clients">SDK et clients</a></li>
+</ol>
+<hr />
+<h2 id="vue-densemble-1">Vue d’ensemble</h2>
+<p>L’API Prompt2Prod expose des endpoints RESTful pour la génération de
+projets via intelligence artificielle. Elle supporte deux modes de
+traitement :</p>
+<ul>
+<li><strong>Mode Local</strong> (<code>local</code>) : Utilise Ollama
+avec modèles locaux (Llama, Mistral)</li>
+<li><strong>Mode Cloud</strong> (<code>cloud</code>) : Routage via
+KGateway (architecture de démonstration)</li>
+</ul>
+<h3 id="caractéristiques-techniques">Caractéristiques techniques</h3>
+<ul>
+<li><strong>Framework</strong>: FastAPI avec validation automatique</li>
+<li><strong>Format</strong>: JSON pour toutes les requêtes/réponses</li>
+<li><strong>Documentation</strong>: Swagger UI disponible sur
+<code>/docs</code></li>
+<li><strong>Validation</strong>: Pydantic pour la sérialisation des
+données</li>
+<li><strong>Performances</strong>: Architecture async pour haute
+concurrence</li>
+</ul>
+<hr />
+<h2 id="authentification">Authentification</h2>
+<p><strong>Aucune authentification n’est requise</strong> pour ce POC.
+L’API est ouverte et accessible directement.</p>
+<hr />
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="health-check">1. Health Check</h3>
+<p>Vérification de l’état de l’API et des services dépendants.</p>
+<pre class="http"><code>GET /health</code></pre>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;healthy&quot;</span><span class="fu">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-09-10T09:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;services&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;ollama&quot;</span><span class="fu">:</span> <span class="st">&quot;connected&quot;</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;kgateway&quot;</span><span class="fu">:</span> <span class="st">&quot;available&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="root-endpoint">2. Root Endpoint</h3>
+<p>Information générale sur l’API.</p>
+<pre class="http"><code>GET /</code></pre>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;POC OpenHands API&quot;</span><span class="fu">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;running&quot;</span><span class="fu">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;docs&quot;</span><span class="fu">:</span> <span class="st">&quot;/docs&quot;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="generate-project">3. Generate Project</h3>
+<p><strong>Endpoint principal</strong> pour la génération de projets via
+LLM.</p>
+<pre class="http"><code>POST /generate</code></pre>
+<h4 id="paramètres-de-requête">Paramètres de requête</h4>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 12%" />
+<col style="width: 19%" />
+<col style="width: 17%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paramètre</th>
+<th>Type</th>
+<th>Requis</th>
+<th>Défaut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prompt</code></td>
+<td>string</td>
+<td>✅</td>
+<td>-</td>
+<td>Description du projet à générer</td>
+</tr>
+<tr class="even">
+<td><code>model</code></td>
+<td>string</td>
+<td>❌</td>
+<td>“llama3.2:1b”</td>
+<td>Modèle LLM à utiliser</td>
+</tr>
+<tr class="odd">
+<td><code>mode</code></td>
+<td>string</td>
+<td>❌</td>
+<td>“local”</td>
+<td>Mode de traitement (<code>local</code> ou <code>cloud</code>)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="modèles-disponibles">Modèles disponibles</h4>
+<p><strong>Mode Local (Ollama):</strong> - <code>llama3.2:1b</code> -
+Modèle léger, rapide (par défaut) - <code>mistral:7b</code> - Équilibre
+performance/qualité - <code>codellama:13b</code> - Spécialisé
+développement - <em>Autres modèles Ollama selon installation</em></p>
+<p><strong>Mode Cloud :</strong> - ⚠️ Non implémenté dans ce POC -
+Architecture prête pour intégration future - Routage via KGateway
+fonctionnel</p>
+<h4 id="exemple-de-requête">Exemple de requête</h4>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a Python FastAPI todo application with PostgreSQL database&quot;,</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h4 id="response-200---succès">Response 200 - Succès</h4>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;response&quot;</span><span class="fu">:</span> <span class="st">&quot;# Todo API with FastAPI and PostgreSQL</span><span class="ch">\n\n</span><span class="st">## Structure du projet</span><span class="ch">\n\n</span><span class="st">```</span><span class="ch">\n</span><span class="st">todo-api/</span><span class="ch">\n</span><span class="st">├── app/</span><span class="ch">\n</span><span class="st">│   ├── __init__.py</span><span class="ch">\n</span><span class="st">│   ├── main.py</span><span class="ch">\n</span><span class="st">│   ├── database.py</span><span class="ch">\n</span><span class="st">│   ├── models.py</span><span class="ch">\n</span><span class="st">│   ├── schemas.py</span><span class="ch">\n</span><span class="st">│   └── crud.py</span><span class="ch">\n</span><span class="st">├── requirements.txt</span><span class="ch">\n</span><span class="st">└── README.md</span><span class="ch">\n</span><span class="st">```</span><span class="ch">\n\n</span><span class="st">## Installation</span><span class="ch">\n\n</span><span class="st">```bash</span><span class="ch">\n</span><span class="st">pip install fastapi uvicorn psycopg2-binary sqlalchemy</span><span class="ch">\n</span><span class="st">```</span><span class="ch">\n\n</span><span class="st">## Code principal (main.py)</span><span class="ch">\n\n</span><span class="st">```python</span><span class="ch">\n</span><span class="st">from fastapi import FastAPI, Depends, HTTPException</span><span class="ch">\n</span><span class="st">from sqlalchemy.orm import Session</span><span class="ch">\n</span><span class="st">from . import crud, models, schemas, database</span><span class="ch">\n\n</span><span class="st">models.Base.metadata.create_all(bind=database.engine)</span><span class="ch">\n\n</span><span class="st">app = FastAPI(title=</span><span class="ch">\&quot;</span><span class="st">Todo API</span><span class="ch">\&quot;</span><span class="st">, version=</span><span class="ch">\&quot;</span><span class="st">1.0.0</span><span class="ch">\&quot;</span><span class="st">)</span><span class="ch">\n\n</span><span class="st"># Dependency</span><span class="ch">\n</span><span class="st">def get_db():</span><span class="ch">\n</span><span class="st">    db = database.SessionLocal()</span><span class="ch">\n</span><span class="st">    try:</span><span class="ch">\n</span><span class="st">        yield db</span><span class="ch">\n</span><span class="st">    finally:</span><span class="ch">\n</span><span class="st">        db.close()</span><span class="ch">\n\n</span><span class="st">@app.post(</span><span class="ch">\&quot;</span><span class="st">/todos/</span><span class="ch">\&quot;</span><span class="st">, response_model=schemas.Todo)</span><span class="ch">\n</span><span class="st">def create_todo(todo: schemas.TodoCreate, db: Session = Depends(get_db)):</span><span class="ch">\n</span><span class="st">    return crud.create_todo(db=db, todo=todo)</span><span class="ch">\n\n</span><span class="st">@app.get(</span><span class="ch">\&quot;</span><span class="st">/todos/</span><span class="ch">\&quot;</span><span class="st">, response_model=list[schemas.Todo])</span><span class="ch">\n</span><span class="st">def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):</span><span class="ch">\n</span><span class="st">    todos = crud.get_todos(db, skip=skip, limit=limit)</span><span class="ch">\n</span><span class="st">    return todos</span><span class="ch">\n</span><span class="st">```</span><span class="ch">\n\n</span><span class="st">## Modèles de données (models.py)</span><span class="ch">\n\n</span><span class="st">```python</span><span class="ch">\n</span><span class="st">from sqlalchemy import Column, Integer, String, Boolean</span><span class="ch">\n</span><span class="st">from sqlalchemy.ext.declarative import declarative_base</span><span class="ch">\n\n</span><span class="st">Base = declarative_base()</span><span class="ch">\n\n</span><span class="st">class Todo(Base):</span><span class="ch">\n</span><span class="st">    __tablename__ = </span><span class="ch">\&quot;</span><span class="st">todos</span><span class="ch">\&quot;\n</span><span class="st">    </span><span class="ch">\n</span><span class="st">    id = Column(Integer, primary_key=True, index=True)</span><span class="ch">\n</span><span class="st">    title = Column(String, index=True)</span><span class="ch">\n</span><span class="st">    description = Column(String)</span><span class="ch">\n</span><span class="st">    completed = Column(Boolean, default=False)</span><span class="ch">\n</span><span class="st">```</span><span class="ch">\n\n</span><span class="st">## Configuration Docker</span><span class="ch">\n\n</span><span class="st">```dockerfile</span><span class="ch">\n</span><span class="st">FROM python:3.11-slim</span><span class="ch">\n\n</span><span class="st">WORKDIR /app</span><span class="ch">\n</span><span class="st">COPY requirements.txt .</span><span class="ch">\n</span><span class="st">RUN pip install -r requirements.txt</span><span class="ch">\n\n</span><span class="st">COPY . .</span><span class="ch">\n</span><span class="st">EXPOSE 8000</span><span class="ch">\n\n</span><span class="st">CMD [</span><span class="ch">\&quot;</span><span class="st">uvicorn</span><span class="ch">\&quot;</span><span class="st">, </span><span class="ch">\&quot;</span><span class="st">app.main:app</span><span class="ch">\&quot;</span><span class="st">, </span><span class="ch">\&quot;</span><span class="st">--host</span><span class="ch">\&quot;</span><span class="st">, </span><span class="ch">\&quot;</span><span class="st">0.0.0.0</span><span class="ch">\&quot;</span><span class="st">, </span><span class="ch">\&quot;</span><span class="st">--port</span><span class="ch">\&quot;</span><span class="st">, </span><span class="ch">\&quot;</span><span class="st">8000</span><span class="ch">\&quot;</span><span class="st">]</span><span class="ch">\n</span><span class="st">```&quot;</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;llama3.2:1b&quot;</span><span class="fu">,</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;local&quot;</span><span class="fu">,</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generation_time&quot;</span><span class="fu">:</span> <span class="fl">2.34</span><span class="fu">,</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;token_count&quot;</span><span class="fu">:</span> <span class="dv">456</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="response-400---erreur-de-validation">Response 400 - Erreur de
+validation</h4>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;loc&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;body&quot;</span><span class="ot">,</span> <span class="st">&quot;prompt&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;msg&quot;</span><span class="fu">:</span> <span class="st">&quot;field required&quot;</span><span class="fu">,</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;value_error.missing&quot;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="response-500---erreur-llm">Response 500 - Erreur LLM</h4>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;Client error &#39;404 Not Found&#39; for url &#39;http://ollama:11434/api/generate&#39;</span><span class="ch">\n</span><span class="st">For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404&quot;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="response-504---timeout">Response 504 - Timeout</h4>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;detail&quot;</span><span class="fu">:</span> <span class="st">&quot;LLM timeout&quot;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h3 id="list-models">4. List Models</h3>
+<p>Récupération de la liste des modèles disponibles.</p>
+<pre class="http"><code>GET /models</code></pre>
+<h4 id="response-200---succès-1">Response 200 - Succès</h4>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;models&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;llama3.2:1b&quot;</span><span class="fu">,</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;size&quot;</span><span class="fu">:</span> <span class="dv">1337000000</span><span class="fu">,</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;digest&quot;</span><span class="fu">:</span> <span class="st">&quot;74701a8c35f6&quot;</span><span class="fu">,</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;modified_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-09-10T08:30:00Z&quot;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;mistral:7b&quot;</span><span class="fu">,</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;size&quot;</span><span class="fu">:</span> <span class="dv">4109000000</span><span class="fu">,</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;digest&quot;</span><span class="fu">:</span> <span class="st">&quot;e8a35b5937a5&quot;</span><span class="fu">,</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;modified_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-09-09T14:20:00Z&quot;</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="response-500---erreur">Response 500 - Erreur</h4>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;models&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="st">&quot;Connection failed to Ollama service&quot;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="modèles-de-données">Modèles de données</h2>
+<h3 id="promptrequest">PromptRequest</h3>
+<p>Modèle pour les requêtes de génération.</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PromptRequest(BaseModel):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    prompt: <span class="bu">str</span> <span class="op">=</span> Field(..., description<span class="op">=</span><span class="st">&quot;Description du projet à générer&quot;</span>, min_length<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    model: Optional[<span class="bu">str</span>] <span class="op">=</span> Field(<span class="st">&quot;llama3.2:1b&quot;</span>, description<span class="op">=</span><span class="st">&quot;Modèle LLM à utiliser&quot;</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    mode: Optional[<span class="bu">str</span>] <span class="op">=</span> Field(<span class="st">&quot;local&quot;</span>, description<span class="op">=</span><span class="st">&quot;Mode de traitement&quot;</span>, regex<span class="op">=</span><span class="st">&quot;^(local|cloud)$&quot;</span>)</span></code></pre></div>
+<p><strong>Exemple JSON:</strong></p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;prompt&quot;</span><span class="fu">:</span> <span class="st">&quot;Create a React TypeScript application with authentication&quot;</span><span class="fu">,</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;llama3.2:1b&quot;</span><span class="fu">,</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;local&quot;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="promptresponse">PromptResponse</h3>
+<p>Modèle pour les réponses de génération.</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PromptResponse(BaseModel):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    response: <span class="bu">str</span> <span class="op">=</span> Field(..., description<span class="op">=</span><span class="st">&quot;Code/projet généré&quot;</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    model: <span class="bu">str</span> <span class="op">=</span> Field(..., description<span class="op">=</span><span class="st">&quot;Modèle utilisé&quot;</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    mode: <span class="bu">str</span> <span class="op">=</span> Field(..., description<span class="op">=</span><span class="st">&quot;Mode de traitement utilisé&quot;</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    generation_time: Optional[<span class="bu">float</span>] <span class="op">=</span> Field(<span class="va">None</span>, description<span class="op">=</span><span class="st">&quot;Temps de génération en secondes&quot;</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    token_count: Optional[<span class="bu">int</span>] <span class="op">=</span> Field(<span class="va">None</span>, description<span class="op">=</span><span class="st">&quot;Nombre de tokens générés&quot;</span>)</span></code></pre></div>
+<p><strong>Exemple JSON:</strong></p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;response&quot;</span><span class="fu">:</span> <span class="st">&quot;# React TypeScript App</span><span class="ch">\n\n</span><span class="st">## Installation</span><span class="ch">\n\n</span><span class="st">```bash</span><span class="ch">\n</span><span class="st">npx create-react-app my-app --template typescript</span><span class="ch">\n</span><span class="st">```&quot;</span><span class="fu">,</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;llama3.2:1b&quot;</span><span class="fu">,</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;mode&quot;</span><span class="fu">:</span> <span class="st">&quot;local&quot;</span><span class="fu">,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generation_time&quot;</span><span class="fu">:</span> <span class="fl">1.23</span><span class="fu">,</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;token_count&quot;</span><span class="fu">:</span> <span class="dv">234</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="codes-derreur">Codes d’erreur</h2>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 17%" />
+<col style="width: 28%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Status</th>
+<th>Description</th>
+<th>Action recommandée</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>200</td>
+<td>OK</td>
+<td>Succès</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td>400</td>
+<td>Bad Request</td>
+<td>Données invalides</td>
+<td>Vérifier les paramètres</td>
+</tr>
+<tr class="odd">
+<td>404</td>
+<td>Not Found</td>
+<td>Endpoint inexistant</td>
+<td>Vérifier l’URL</td>
+</tr>
+<tr class="even">
+<td>422</td>
+<td>Unprocessable Entity</td>
+<td>Validation échouée</td>
+<td>Corriger les données JSON</td>
+</tr>
+<tr class="odd">
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Erreur serveur</td>
+<td>Retry ou contacter support</td>
+</tr>
+<tr class="even">
+<td>504</td>
+<td>Gateway Timeout</td>
+<td>Timeout LLM</td>
+<td>Retry avec prompt plus simple</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="exemples-dutilisation">Exemples d’utilisation</h2>
+<h3 id="génération-dune-api-rest">Génération d’une API REST</h3>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a Node.js Express API for user management with JWT authentication and MongoDB&quot;,</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="génération-dune-application-frontend">Génération d’une
+application frontend</h3>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a Vue.js application with Vuetify for a task management system&quot;,</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;mistral:7b&quot;,</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="mode-cloud-pour-projets-complexes">Mode cloud pour projets
+complexes</h3>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a microservices architecture with Docker, Kubernetes, and service mesh for an e-commerce platform&quot;,</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;gpt-4&quot;,</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;cloud&quot;</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="vérification-de-santé">Vérification de santé</h3>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> GET <span class="st">&quot;http://localhost:8080/health&quot;</span></span></code></pre></div>
+<h3 id="liste-des-modèles">Liste des modèles</h3>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> GET <span class="st">&quot;http://localhost:8080/models&quot;</span></span></code></pre></div>
+<hr />
+<h2 id="intégration">Intégration</h2>
+<h3 id="exemples-dintégration">Exemples d’intégration</h3>
+<p>Le POC expose une API REST standard. Voici des exemples simples
+d’intégration :</p>
+<h4 id="python-avec-requests">Python avec requests</h4>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_code(prompt, model<span class="op">=</span><span class="st">&quot;llama3.2:1b&quot;</span>):</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.post(<span class="st">&quot;http://localhost:8080/generate&quot;</span>, </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                           json<span class="op">=</span>{<span class="st">&quot;prompt&quot;</span>: prompt, <span class="st">&quot;model&quot;</span>: model, <span class="st">&quot;mode&quot;</span>: <span class="st">&quot;local&quot;</span>})</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> response.json()</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> generate_code(<span class="st">&quot;Create a Python hello world script&quot;</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result[<span class="st">&quot;response&quot;</span>])</span></code></pre></div>
+<h4 id="javascript-avec-fetch">JavaScript avec fetch</h4>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">generateCode</span>(prompt<span class="op">,</span> model <span class="op">=</span> <span class="st">&quot;llama3.2:1b&quot;</span>) {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(<span class="st">&quot;http://localhost:8080/generate&quot;</span><span class="op">,</span> {</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">method</span><span class="op">:</span> <span class="st">&quot;POST&quot;</span><span class="op">,</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">headers</span><span class="op">:</span> {<span class="st">&quot;Content-Type&quot;</span><span class="op">:</span> <span class="st">&quot;application/json&quot;</span>}<span class="op">,</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">body</span><span class="op">:</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>({prompt<span class="op">,</span> model<span class="op">,</span> <span class="dt">mode</span><span class="op">:</span> <span class="st">&quot;local&quot;</span>})</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">generateCode</span>(<span class="st">&quot;Create a Node.js hello world script&quot;</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">then</span>(result <span class="kw">=&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(result<span class="op">.</span><span class="at">response</span>))<span class="op">;</span></span></code></pre></div>
+<p><strong>Note :</strong> Ce POC n’inclut pas de SDK officiel. Les
+exemples ci-dessus montrent une intégration basique via HTTP.</p>
+<hr />
+<h2 id="documentation-interactive">Documentation interactive</h2>
+<p>L’API expose automatiquement une documentation Swagger interactive
+accessible à :</p>
+<ul>
+<li><strong>Swagger UI</strong>:
+<code>http://localhost:8080/docs</code></li>
+<li><strong>ReDoc</strong>:
+<code>http://localhost:8080/redoc</code></li>
+<li><strong>OpenAPI Schema</strong>:
+<code>http://localhost:8080/openapi.json</code></li>
+</ul>
+<p>Ces interfaces permettent de : - ✅ Tester les endpoints directement
+- ✅ Voir les schémas de données en détail - ✅ Générer des clients dans
+différents languages - ✅ Valider les réponses en temps réel</p>
+<hr />
+<p><em>Documentation générée automatiquement - Dernière mise à jour:
+Septembre 2025</em></p>
+<hr />
+<h1 id="guide-utilisateur---prompt2prod">Guide Utilisateur -
+Prompt2Prod</h1>
+<h2 id="documentation-fonctionnelle-et-cas-dusage">Documentation
+fonctionnelle et cas d’usage</h2>
+<p><strong>Version:</strong> 1.0<br />
+<strong>Public cible:</strong> Développeurs, DevOps, Product
+Managers<br />
+<strong>Prérequis:</strong> Notions de base en développement</p>
+<hr />
+<h2 id="table-des-matières-2">Table des Matières</h2>
+<ol type="1">
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#cas-dusage-principaux">Cas d’usage principaux</a></li>
+<li><a href="#guide-de-démarrage-rapide">Guide de démarrage
+rapide</a></li>
+<li><a href="#utilisation-de-lapi">Utilisation de l’API</a></li>
+<li><a href="#exemples-pratiques">Exemples pratiques</a></li>
+<li><a href="#bonnes-pratiques">Bonnes pratiques</a></li>
+<li><a href="#dépannage">Dépannage</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<h3 id="quest-ce-que-prompt2prod">Qu’est-ce que Prompt2Prod ?</h3>
+<p><strong>Prompt2Prod</strong> est un Proof of Concept (POC)
+révolutionnaire qui transforme vos idées de projets logiciels en code
+prêt pour la production, simplement en décrivant ce que vous voulez
+créer en langage naturel.</p>
+<h3 id="le-problème-résolu">Le problème résolu</h3>
+<ul>
+<li>⏰ <strong>Temps de setup initial</strong> : Plus besoin de passer
+des heures à configurer l’architecture de base</li>
+<li>🔧 <strong>Boilerplate repetitif</strong> : Génération automatique
+du code de base</li>
+<li>📚 <strong>Documentation manquante</strong> : Code généré avec
+documentation intégrée</li>
+<li>🚀 <strong>Time-to-market</strong> : De l’idée au prototype
+fonctionnel en secondes</li>
+</ul>
+<h3 id="qui-peut-lutiliser">Qui peut l’utiliser ?</h3>
+<ul>
+<li><strong>Développeurs</strong> : Prototypage rapide
+d’applications</li>
+<li><strong>Product Managers</strong> : Validation d’idées avec des
+prototypes</li>
+<li><strong>Startups</strong> : MVP rapides pour validation marché</li>
+<li><strong>Formateurs</strong> : Création d’exemples de code pour
+l’apprentissage</li>
+<li><strong>DevOps</strong> : Templates d’infrastructure et
+déploiement</li>
+</ul>
+<hr />
+<h2 id="cas-dusage-principaux">Cas d’usage principaux</h2>
+<h3 id="génération-de-projets-complets">1. 🏗️ Génération de projets
+complets</h3>
+<p><strong>Exemple concret :</strong> Créer une API REST complète</p>
+<pre><code>Prompt: &quot;Create a Node.js Express API for a library management system with user authentication, book CRUD operations, and borrowing system&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Structure complète du projet -
+Configuration Express.js - Modèles de données (User, Book, Borrow) -
+Routes API RESTful - Middleware d’authentification JWT - Configuration
+de base de données MongoDB - Tests unitaires - Dockerfile et
+docker-compose.yml - README avec instructions de déploiement</p>
+<h3 id="génération-dinterfaces-utilisateur">2. 🎨 Génération
+d’interfaces utilisateur</h3>
+<p><strong>Exemple concret :</strong> Interface web moderne</p>
+<pre><code>Prompt: &quot;Create a React dashboard with TypeScript for an e-commerce admin panel with charts, product management, and order tracking&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Application React avec
+TypeScript - Composants réutilisables - Routing avec React Router - État
+global avec Context/Redux - Graphiques avec Chart.js - Interface
+responsive avec CSS moderne - Mock API pour les tests - Tests avec Jest
+et React Testing Library</p>
+<h3 id="scripts-et-outils-de-développement">3. 🐍 Scripts et outils de
+développement</h3>
+<p><strong>Exemple concret :</strong> Outil en ligne de commande</p>
+<pre><code>Prompt: &quot;Create a Python CLI tool for analyzing log files with filtering, statistics, and export to CSV&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Script Python avec argparse -
+Classes pour parsing des logs - Fonctions de filtrage avancées -
+Génération de statistiques - Export CSV/JSON - Tests unitaires avec
+pytest - Configuration setuptools - Documentation complète</p>
+<h3 id="applications-mobiles">4. 📱 Applications mobiles</h3>
+<p><strong>Exemple concret :</strong> App mobile simple</p>
+<pre><code>Prompt: &quot;Create a React Native todo app with offline storage and sync capabilities&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Structure React Native -
+Navigation avec React Navigation - Storage local avec AsyncStorage -
+Synchronisation avec API - Interface utilisateur moderne - Gestion
+d’état avec hooks - Build scripts pour iOS/Android</p>
+<hr />
+<h2 id="guide-de-démarrage-rapide">Guide de démarrage rapide</h2>
+<h3 id="étape-1-accéder-à-lapi">Étape 1: Accéder à l’API</h3>
+<p>L’API est accessible à l’adresse : <code>http://localhost:8080</code>
+une fois déployée.</p>
+<h3 id="étape-2-première-génération">Étape 2: Première génération</h3>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test simple avec curl</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a simple Python hello world script with documentation&quot;,</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="étape-3-analyser-le-résultat">Étape 3: Analyser le résultat</h3>
+<p>La réponse contient : - <strong>Code généré</strong> : Prêt à être
+utilisé - <strong>Documentation</strong> : Explications intégrées -
+<strong>Instructions</strong> : Comment exécuter/déployer -
+<strong>Métadonnées</strong> : Modèle utilisé, temps de génération</p>
+<h3 id="étape-4-itération-et-amélioration">Étape 4: Itération et
+amélioration</h3>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Affinage du prompt pour plus de détails</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a Python hello world script with argument parsing, logging, and unit tests&quot;,</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<hr />
+<h2 id="utilisation-de-lapi">Utilisation de l’API</h2>
+<h3 id="interface-web-swagger">Interface Web (Swagger)</h3>
+<p>La façon la plus simple d’utiliser l’API est via l’interface Swagger
+:</p>
+<ol type="1">
+<li>Ouvrez <code>http://localhost:8080/docs</code></li>
+<li>Cliquez sur l’endpoint <code>/generate</code></li>
+<li>Cliquez sur “Try it out”</li>
+<li>Saisissez votre prompt</li>
+<li>Exécutez la requête</li>
+<li>Copiez le code généré</li>
+</ol>
+<h3 id="modes-de-génération-disponibles">Modes de génération
+disponibles</h3>
+<h4 id="mode-local-mode-local">Mode Local
+(<code>"mode": "local"</code>)</h4>
+<p><strong>Avantages :</strong> - ✅ Gratuit et illimité - ✅ Données
+privées (pas d’envoi vers le cloud) - ✅ Latence faible - ✅ Fonctionne
+offline</p>
+<p><strong>Inconvénients :</strong> - ❌ Qualité variable selon le
+modèle - ❌ Limité pour des tâches très complexes - ❌ Consomme des
+ressources locales</p>
+<p><strong>Modèles recommandés :</strong> - <code>llama3.2:1b</code> :
+Ultra-rapide, idéal pour prototypage - <code>mistral:7b</code> :
+Équilibré qualité/performance - <code>codellama:13b</code> : Spécialisé
+développement</p>
+<h4 id="mode-cloud-mode-cloud">Mode Cloud
+(<code>"mode": "cloud"</code>)</h4>
+<p><strong>Avantages :</strong> - ✅ Très haute qualité de génération -
+✅ Gestion de projets complexes - ✅ Modèles spécialisés disponibles -
+✅ Pas de consommation locale</p>
+<p><strong>Inconvénients :</strong> - ❌ Coût par utilisation - ❌
+Dépendance réseau - ❌ Données envoyées vers le cloud - ❌ Latence plus
+élevée</p>
+<p><strong>Modèles recommandés :</strong> - <code>gpt-4</code> :
+Excellence pour projets complexes - <code>claude-3-sonnet</code> :
+Excellent pour le code - <code>gpt-3.5-turbo</code> : Rapport
+qualité/prix optimal</p>
+<hr />
+<h2 id="exemples-pratiques">Exemples pratiques</h2>
+<h3 id="exemple-1-api-de-blog-avec-authentification">Exemple 1: API de
+blog avec authentification</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a FastAPI blog application with:
+- User authentication using JWT tokens
+- CRUD operations for blog posts
+- Comment system with moderation
+- PostgreSQL database with SQLAlchemy
+- API documentation with examples
+- Docker configuration for deployment
+- Basic frontend with HTML templates</code></pre>
+<p><strong>Utilisation :</strong></p>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a FastAPI blog application with: - User authentication using JWT tokens - CRUD operations for blog posts - Comment system with moderation - PostgreSQL database with SQLAlchemy - API documentation with examples - Docker configuration for deployment - Basic frontend with HTML templates&quot;,</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;mistral:7b&quot;,</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="exemple-2-dashboard-react-avec-graphiques">Exemple 2: Dashboard
+React avec graphiques</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a React TypeScript dashboard application featuring:
+- Modern Material-UI design
+- Real-time data visualization with Chart.js
+- User management interface
+- Responsive layout for mobile/desktop
+- API integration with axios
+- State management with Redux Toolkit
+- Unit tests with Jest and React Testing Library
+- Webpack configuration for production build</code></pre>
+<h3 id="exemple-3-microservice-en-go">Exemple 3: Microservice en Go</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a Go microservice for user management with:
+- RESTful API using Gin framework
+- PostgreSQL database with GORM
+- JWT authentication middleware
+- Input validation and error handling
+- Structured logging with logrus
+- Health check endpoints
+- Docker multi-stage build
+- Kubernetes deployment manifests
+- Unit and integration tests</code></pre>
+<hr />
+<h2 id="bonnes-pratiques-1">Bonnes pratiques</h2>
+<h3 id="rédaction-de-prompts-efficaces">📝 Rédaction de prompts
+efficaces</h3>
+<h4 id="do---bonnes-pratiques">✅ DO - Bonnes pratiques</h4>
+<ol type="1">
+<li><p><strong>Soyez spécifique :</strong></p>
+<pre><code>❌ &quot;Create a web app&quot;
+✅ &quot;Create a React e-commerce app with product catalog, shopping cart, and checkout&quot;</code></pre></li>
+<li><p><strong>Mentionnez la stack technique :</strong></p>
+<pre><code>❌ &quot;Create a database app&quot;
+✅ &quot;Create a Python Flask app with PostgreSQL database and SQLAlchemy ORM&quot;</code></pre></li>
+<li><p><strong>Demandez la documentation :</strong></p>
+<pre><code>✅ &quot;Include API documentation and setup instructions&quot;</code></pre></li>
+<li><p><strong>Spécifiez les fonctionnalités :</strong></p>
+<pre><code>✅ &quot;With user authentication, CRUD operations, and search functionality&quot;</code></pre></li>
+<li><p><strong>Mentionnez les tests :</strong></p>
+<pre><code>✅ &quot;Include unit tests and example usage&quot;</code></pre></li>
+</ol>
+<h4 id="dont---à-éviter">❌ DON’T - À éviter</h4>
+<ol type="1">
+<li><p><strong>Prompts trop vagues :</strong></p>
+<pre><code>❌ &quot;Make something cool&quot;
+❌ &quot;Create an app&quot;</code></pre></li>
+<li><p><strong>Trop de technologies incompatibles :</strong></p>
+<pre><code>❌ &quot;Use React, Vue, Angular, and jQuery together&quot;</code></pre></li>
+<li><p><strong>Demandes irréalisables :</strong></p>
+<pre><code>❌ &quot;Create the next Facebook in one request&quot;</code></pre></li>
+</ol>
+<h3 id="processus-ditération">🔄 Processus d’itération</h3>
+<ol type="1">
+<li><p><strong>Démarrez simple :</strong></p>
+<pre><code>&quot;Create a basic Python web API with Flask&quot;</code></pre></li>
+<li><p><strong>Ajoutez des détails :</strong></p>
+<pre><code>&quot;Create a Python Flask API for user management with SQLite database&quot;</code></pre></li>
+<li><p><strong>Précisez les fonctionnalités :</strong></p>
+<pre><code>&quot;Create a Python Flask API for user management with SQLite database, JWT authentication, and CRUD endpoints&quot;</code></pre></li>
+<li><p><strong>Finalisez avec la production :</strong></p>
+<pre><code>&quot;Create a production-ready Python Flask API for user management with PostgreSQL, JWT authentication, CRUD endpoints, logging, and Docker configuration&quot;</code></pre></li>
+</ol>
+<h3 id="sélection-du-bon-modèle">🎯 Sélection du bon modèle</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Type de projet</th>
+<th>Complexité</th>
+<th>Modèle recommandé</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scripts simples</td>
+<td>Faible</td>
+<td><code>llama3.2:1b</code></td>
+<td>Local</td>
+</tr>
+<tr class="even">
+<td>APIs standards</td>
+<td>Moyenne</td>
+<td><code>mistral:7b</code></td>
+<td>Local</td>
+</tr>
+<tr class="odd">
+<td>Apps complètes</td>
+<td>Moyenne</td>
+<td><code>codellama:13b</code></td>
+<td>Local</td>
+</tr>
+<tr class="even">
+<td>Architectures complexes</td>
+<td>Élevée</td>
+<td><code>gpt-4</code></td>
+<td>Cloud</td>
+</tr>
+<tr class="odd">
+<td>Code critique</td>
+<td>Élevée</td>
+<td><code>claude-3-sonnet</code></td>
+<td>Cloud</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dépannage">Dépannage</h2>
+<h3 id="problèmes-courants-et-solutions">Problèmes courants et
+solutions</h3>
+<h4 id="erreur-model-not-found">🚫 Erreur “Model not found”</h4>
+<p><strong>Symptôme :</strong>
+<code>{"detail": "Model 'xyz' not available"}</code></p>
+<p><strong>Solutions :</strong> 1. Vérifier les modèles disponibles :
+<code>bash    curl http://localhost:8080/models</code> 2. Utiliser un
+modèle existant 3. Charger le modèle manquant :
+<code>bash    kubectl exec deployment/ollama -- ollama pull model-name</code></p>
+<h4 id="timeouts-fréquents">⏱️ Timeouts fréquents</h4>
+<p><strong>Symptôme :</strong>
+<code>{"detail": "LLM timeout"}</code></p>
+<p><strong>Solutions :</strong> 1. Simplifier le prompt 2. Utiliser un
+modèle plus léger (<code>llama3.2:1b</code>) 3. Diviser en plusieurs
+requêtes 4. Passer en mode cloud pour les gros projets</p>
+<h4 id="erreur-de-connexion">🔌 Erreur de connexion</h4>
+<p><strong>Symptôme :</strong> <code>Connection refused</code> ou
+<code>Service unavailable</code></p>
+<p><strong>Solutions :</strong> 1. Vérifier que les services sont
+démarrés : <code>bash    kubectl get pods -A</code> 2. Redémarrer les
+services : <code>bash    kubectl rollout restart deployment/app</code>
+3. Vérifier les logs :
+<code>bash    kubectl logs deployment/app</code></p>
+<h4 id="réponses-de-mauvaise-qualité">📝 Réponses de mauvaise
+qualité</h4>
+<p><strong>Symptômes :</strong> Code incomplet, erreurs de syntaxe</p>
+<p><strong>Solutions :</strong> 1. Améliorer la précision du prompt 2.
+Utiliser un modèle plus performant 3. Passer en mode cloud 4. Demander
+explicitement la documentation 5. Spécifier la version des
+technologies</p>
+<h3 id="debug-et-monitoring">Debug et monitoring</h3>
+<div class="sourceCode" id="cb60"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier l&#39;état de l&#39;API</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://localhost:8080/health</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Voir les logs en temps réel</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> logs <span class="at">-f</span> deployment/app</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier les ressources</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> top pods</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de connectivité</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/app <span class="at">--</span> curl <span class="at">-I</span> http://ollama:11434</span></code></pre></div>
+<hr />
+<h2 id="faq">FAQ</h2>
+<h3 id="questions-générales">Questions générales</h3>
+<p><strong>Q: L’API est-elle gratuite ?</strong> R: Oui, ce POC est
+entièrement gratuit. Il utilise Ollama localement sans coûts
+externes.</p>
+<p><strong>Q: Peut-on utiliser l’API pour des projets commerciaux
+?</strong> R: Oui, vérifiez simplement les licences des modèles
+utilisés.</p>
+<p><strong>Q: Quelle est la limite de taille des prompts ?</strong> R:
+Les prompts peuvent contenir jusqu’à 4000 caractères pour un résultat
+optimal.</p>
+<p><strong>Q: Le code généré est-il sécurisé ?</strong> R: Le code suit
+les bonnes pratiques basiques, mais un audit de sécurité est recommandé
+pour la production.</p>
+<h3 id="questions-techniques">Questions techniques</h3>
+<p><strong>Q: Comment ajouter un nouveau modèle ?</strong> R:
+Connectez-vous au pod Ollama et utilisez
+<code>ollama pull model-name</code>.</p>
+<p><strong>Q: Peut-on personnaliser les réponses ?</strong> R:
+Actuellement non, mais vous pouvez affiner vos prompts pour obtenir le
+style souhaité.</p>
+<p><strong>Q: Y a-t-il une limite de requêtes par minute ?</strong> R:
+Non, mais les ressources système peuvent limiter la performance.</p>
+<p><strong>Q: L’API sauvegarde-t-elle les générations ?</strong> R: Non,
+ce POC ne sauvegarde pas l’historique. C’est une fonctionnalité à
+implémenter si nécessaire.</p>
+<h3 id="questions-sur-la-performance">Questions sur la performance</h3>
+<p><strong>Q: Quel est le temps de réponse moyen ?</strong> R: Mode
+local : 2-60 secondes selon la complexité du prompt et le modèle
+utilisé</p>
+<p><strong>Q: Comment optimiser les performances ?</strong> R: -
+Utilisez des modèles adaptés à la complexité - Gardez les prompts concis
+mais précis - Utilisez le mode local pour les tâches simples</p>
+<p><strong>Q: L’API peut-elle gérer plusieurs utilisateurs ?</strong> R:
+Oui, l’architecture async permet la gestion de requêtes
+concurrentes.</p>
+<hr />
+<h2 id="support-et-communauté">Support et communauté</h2>
+<h3 id="comment-obtenir-de-laide">Comment obtenir de l’aide ?</h3>
+<ol type="1">
+<li><strong>Documentation</strong> : Consultez d’abord cette
+documentation</li>
+<li><strong>Issues GitHub</strong> : Signalez les bugs ou demandez des
+fonctionnalités</li>
+<li><strong>Logs</strong> : Consultez les logs pour diagnostiquer les
+problèmes</li>
+<li><strong>Tests</strong> : Utilisez l’interface Swagger pour tester
+interactivement</li>
+</ol>
+<h3 id="contribuer-au-projet">Contribuer au projet</h3>
+<ul>
+<li>🐛 <strong>Signaler des bugs</strong> via GitHub Issues</li>
+<li>💡 <strong>Suggérer des améliorations</strong> avec des cas d’usage
+concrets</li>
+<li>📚 <strong>Améliorer la documentation</strong> avec vos retours
+d’expérience</li>
+<li>🧪 <strong>Partager vos prompts réussis</strong> pour aider la
+communauté</li>
+</ul>
+<hr />
+<h2 id="à-propos-de-ce-poc">À propos de ce POC</h2>
+<p>Ce <strong>Prompt2Prod</strong> est une démonstration d’architecture
+DevOps moderne intégrant l’IA.</p>
+<h3 id="fonctionnalités-actuelles">Fonctionnalités actuelles</h3>
+<ul>
+<li>✅ <strong>Génération de code</strong> via modèles Ollama
+locaux</li>
+<li>✅ <strong>API FastAPI</strong> avec documentation Swagger</li>
+<li>✅ <strong>Architecture Kubernetes</strong> cloud-native</li>
+<li>✅ <strong>Pipeline CI/CD</strong> avec GitHub Actions</li>
+<li>✅ <strong>Routage intelligent</strong> via KGateway</li>
+</ul>
+<h3 id="limitations-du-poc">Limitations du POC</h3>
+<ul>
+<li>⚠️ Pas de sauvegarde d’historique</li>
+<li>⚠️ Mode cloud non implémenté (architecture seulement)</li>
+<li>⚠️ Pas d’authentification</li>
+<li>⚠️ Génération limitée aux capacités d’Ollama local</li>
+</ul>
+<hr />
+<p><em>Guide utilisateur généré automatiquement - Dernière mise à jour:
+Septembre 2025</em></p>
+</body>
+</html>

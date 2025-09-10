@@ -3,20 +3,20 @@ kind: Deployment
 metadata:
   name: app
   labels:
-    app: poc-openhands
+    app: prompt2prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: poc-openhands
+      app: prompt2prod
   template:
     metadata:
       labels:
-        app: poc-openhands
+        app: prompt2prod
     spec:
       containers:
       - name: app
-        image: ghcr.io/clementv78/poc-openhands:latest
+        image: ghcr.io/clementv78/prompt2prod:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
@@ -51,7 +51,7 @@ kind: Service
 metadata:
   name: app
   labels:
-    app: poc-openhands
+    app: prompt2prod
 spec:
   type: LoadBalancer
   ports:
@@ -60,4 +60,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: poc-openhands
+    app: prompt2prod

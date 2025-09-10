@@ -1,5 +1,5 @@
 """
-POC OpenHands - API principale
+Prompt2Prod - API principale
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,7 +8,7 @@ import httpx
 import os
 from typing import Optional
 
-app = FastAPI(title="POC OpenHands API", version="1.0.0")
+app = FastAPI(title="Prompt2Prod API", version="1.0.0")
 
 # CORS pour development
 app.add_middleware(
@@ -34,7 +34,7 @@ class PromptResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "POC OpenHands API", "status": "running"}
+    return {"message": "Prompt2Prod API", "status": "running"}
 
 @app.get("/health")
 async def health():

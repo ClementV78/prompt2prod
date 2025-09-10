@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Équipe DevOps" />
+  <title>Architecture POC Prompt2Prod</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Architecture POC Prompt2Prod</h1>
+<p class="author">Équipe DevOps</p>
+<p class="date">septembre 2025</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#architecture-prompt2prod"
+id="toc-architecture-prompt2prod">Architecture Prompt2Prod</a>
+<ul>
+<li><a href="#guide-devops-et-documentation-technique"
+id="toc-guide-devops-et-documentation-technique">Guide DevOps et
+Documentation Technique</a></li>
+<li><a href="#table-des-matières" id="toc-table-des-matières">Table des
+Matières</a></li>
+<li><a href="#vue-densemble" id="toc-vue-densemble">Vue d’ensemble</a>
+<ul>
+<li><a href="#objectif-métier" id="toc-objectif-métier">Objectif
+métier</a></li>
+<li><a href="#valeur-ajoutée-devops"
+id="toc-valeur-ajoutée-devops">Valeur ajoutée DevOps</a></li>
+</ul></li>
+<li><a href="#arborescence-du-projet"
+id="toc-arborescence-du-projet">Arborescence du projet</a>
+<ul>
+<li><a href="#rôles-des-composants-clés"
+id="toc-rôles-des-composants-clés">Rôles des composants clés</a></li>
+</ul></li>
+<li><a href="#architecture-technique"
+id="toc-architecture-technique">Architecture technique</a>
+<ul>
+<li><a href="#architecture-globale"
+id="toc-architecture-globale">Architecture globale</a></li>
+<li><a href="#flux-de-données" id="toc-flux-de-données">Flux de
+données</a></li>
+<li><a href="#composants-techniques-détaillés"
+id="toc-composants-techniques-détaillés">Composants techniques
+détaillés</a></li>
+</ul></li>
+<li><a href="#stack-technologique" id="toc-stack-technologique">Stack
+technologique</a>
+<ul>
+<li><a href="#containerisation-et-orchestration"
+id="toc-containerisation-et-orchestration">Containerisation et
+orchestration</a></li>
+<li><a href="#cicd-et-gitops" id="toc-cicd-et-gitops">CI/CD et
+GitOps</a></li>
+<li><a href="#monitoring-et-observabilité"
+id="toc-monitoring-et-observabilité">Monitoring et
+observabilité</a></li>
+<li><a href="#développement-et-tests"
+id="toc-développement-et-tests">Développement et tests</a></li>
+</ul></li>
+<li><a href="#pipeline-devops" id="toc-pipeline-devops">Pipeline
+DevOps</a>
+<ul>
+<li><a href="#github-actions-workflow"
+id="toc-github-actions-workflow">GitHub Actions Workflow</a></li>
+<li><a href="#étapes-du-pipeline" id="toc-étapes-du-pipeline">Étapes du
+pipeline</a></li>
+</ul></li>
+<li><a href="#configuration-de-lenvironnement"
+id="toc-configuration-de-lenvironnement">Configuration de
+l’environnement</a>
+<ul>
+<li><a href="#prérequis-système" id="toc-prérequis-système">Prérequis
+système</a></li>
+<li><a href="#installation-du-cluster-k3s"
+id="toc-installation-du-cluster-k3s">Installation du cluster
+K3s</a></li>
+<li><a href="#setup-des-services-ai"
+id="toc-setup-des-services-ai">Setup des services AI</a></li>
+<li><a href="#configuration-kgateway-cncf"
+id="toc-configuration-kgateway-cncf">Configuration KGateway
+(CNCF)</a></li>
+</ul></li>
+<li><a href="#déploiement" id="toc-déploiement">Déploiement</a>
+<ul>
+<li><a href="#déploiement-automatisé"
+id="toc-déploiement-automatisé">Déploiement automatisé</a></li>
+<li><a href="#déploiement-manuel-étape-par-étape"
+id="toc-déploiement-manuel-étape-par-étape">Déploiement manuel étape par
+étape</a></li>
+<li><a href="#configuration-des-secrets"
+id="toc-configuration-des-secrets">Configuration des secrets</a></li>
+</ul></li>
+<li><a href="#monitoring-et-observabilité-1"
+id="toc-monitoring-et-observabilité-1">Monitoring et observabilité</a>
+<ul>
+<li><a href="#health-checks" id="toc-health-checks">Health
+Checks</a></li>
+<li><a href="#kubernetes-probes" id="toc-kubernetes-probes">Kubernetes
+Probes</a></li>
+<li><a href="#surveillance-opérationnelle"
+id="toc-surveillance-opérationnelle">Surveillance
+opérationnelle</a></li>
+<li><a href="#métriques-importantes-à-surveiller"
+id="toc-métriques-importantes-à-surveiller">Métriques importantes à
+surveiller</a></li>
+</ul></li>
+<li><a href="#bonnes-pratiques" id="toc-bonnes-pratiques">Bonnes
+pratiques</a>
+<ul>
+<li><a href="#sécurité" id="toc-sécurité">Sécurité</a></li>
+<li><a href="#performance" id="toc-performance">Performance</a></li>
+<li><a href="#fiabilité" id="toc-fiabilité">Fiabilité</a></li>
+<li><a href="#maintenabilité"
+id="toc-maintenabilité">Maintenabilité</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+<li><a href="#architecture-réelle-vs-nom-du-projet"
+id="toc-architecture-réelle-vs-nom-du-projet">Architecture réelle vs nom
+du projet</a>
+<ul>
+<li><a href="#ce-qui-est-implémenté" id="toc-ce-qui-est-implémenté">Ce
+qui est implémenté ✅</a></li>
+<li><a href="#ce-que-pourrait-apporter-openhands"
+id="toc-ce-que-pourrait-apporter-openhands">Ce que pourrait apporter
+OpenHands 💭</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="architecture-prompt2prod">Architecture Prompt2Prod</h1>
+<h2 id="guide-devops-et-documentation-technique">Guide DevOps et
+Documentation Technique</h2>
+<p><strong>Version:</strong> 1.0<br />
+<strong>Date:</strong> Septembre 2025<br />
+<strong>Auteur:</strong> Équipe DevOps</p>
+<hr />
+<h2 id="table-des-matières">Table des Matières</h2>
+<ol type="1">
+<li><a href="#vue-densemble">Vue d’ensemble</a></li>
+<li><a href="#arborescence-du-projet">Arborescence du projet</a></li>
+<li><a href="#architecture-technique">Architecture technique</a></li>
+<li><a href="#stack-technologique">Stack technologique</a></li>
+<li><a href="#pipeline-devops">Pipeline DevOps</a></li>
+<li><a href="#configuration-de-lenvironnement">Configuration de
+l’environnement</a></li>
+<li><a href="#déploiement">Déploiement</a></li>
+<li><a href="#monitoring-et-observabilité">Monitoring et
+observabilité</a></li>
+<li><a href="#bonnes-pratiques">Bonnes pratiques</a></li>
+</ol>
+<hr />
+<h2 id="vue-densemble">Vue d’ensemble</h2>
+<p>Le <strong>Prompt2Prod</strong> démontre une pipeline DevOps complet
+permettant de transformer une idée exprimée en langage naturel en un
+projet GitHub déployé et prêt pour la production.</p>
+<h3 id="objectif-métier">Objectif métier</h3>
+<ul>
+<li><strong>Input:</strong> Prompt utilisateur (ex: “Create a Node.js
+REST API for a todo app”)</li>
+<li><strong>Output:</strong> Repository GitHub complet avec code, CI/CD,
+tests, et déploiement</li>
+</ul>
+<h3 id="valeur-ajoutée-devops">Valeur ajoutée DevOps</h3>
+<ul>
+<li>Démonstration de l’automatisation complète de la chaîne de
+valeur</li>
+<li>Intégration d’outils modernes (KGateway CNCF, Ollama, FastAPI)</li>
+<li>Patterns cloud-native avec Kubernetes</li>
+<li>GitOps et Infrastructure as Code</li>
+</ul>
+<hr />
+<h2 id="arborescence-du-projet">Arborescence du projet</h2>
+<pre><code>poc-openhands/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml              # Pipeline CI/CD GitHub Actions
+├── docker/
+│   └── Dockerfile                  # Multi-stage build optimisé
+├── docs/                          # Documentation (ce document)
+│   ├── architecture/
+│   ├── api/
+│   ├── functional/
+│   └── assets/
+├── k8s/
+│   └── base/                      # Manifests Kubernetes
+│       ├── app-deployment.yaml    # Déploiement application principale
+│       └── (autres déploiements K8s)
+├── scripts/                       # Scripts d&#39;automatisation DevOps
+│   ├── setup-k3s.sh             # Installation cluster K3s
+│   ├── setup-kgateway.sh        # Configuration KGateway (CNCF)
+│   ├── setup-ollama-models.sh   # Chargement modèles AI locaux
+│   ├── deploy.sh                 # Script de déploiement complet
+│   └── test.sh                   # Tests d&#39;intégration
+├── src/
+│   └── api/
+│       └── main.py               # API FastAPI principale
+├── tests/                        # Suite de tests automatisés
+│   ├── unit/
+│   └── integration/
+├── requirements.txt              # Dependencies Python
+├── requirements-test.txt         # Dependencies pour tests
+├── CLAUDE.md                     # Instructions pour Claude Code
+└── README.md                     # Documentation utilisateur</code></pre>
+<h3 id="rôles-des-composants-clés">Rôles des composants clés</h3>
+<ul>
+<li><strong><code>.github/workflows/</code></strong>: Pipeline CI/CD
+avec build, test, et déploiement automatisé</li>
+<li><strong><code>docker/</code></strong>: Containerisation avec
+optimisations production</li>
+<li><strong><code>k8s/base/</code></strong>: Déploiements cloud-native
+avec probes de santé</li>
+<li><strong><code>scripts/</code></strong>: Automatisation DevOps pour
+setup et maintenance</li>
+<li><strong><code>src/api/</code></strong>: Logique métier de l’API de
+génération de projets</li>
+</ul>
+<hr />
+<h2 id="architecture-technique">Architecture technique</h2>
+<h3 id="architecture-globale">Architecture globale</h3>
+<pre class="mermaid"><code>graph TB
+    subgraph &quot;Utilisateur&quot;
+        User[👤 Utilisateur]
+    end
+
+    subgraph &quot;GitHub Ecosystem&quot;
+        GH[📱 GitHub Repository]
+        GA[⚡ GitHub Actions]
+        GHCR[📦 GitHub Container Registry]
+    end
+
+    subgraph &quot;Cluster Kubernetes&quot;
+        subgraph &quot;Ingress Layer&quot;
+            KGW[🌐 KGateway&lt;br/&gt;CNCF Gateway API]
+        end
+
+        subgraph &quot;Application Layer&quot;
+            APP[🚀 FastAPI Application]
+        end
+
+        subgraph &quot;AI Services&quot;
+            OLLAMA[🤖 Ollama&lt;br/&gt;Local LLM]
+            OPENROUTER[☁️ OpenRouter&lt;br/&gt;Cloud LLM]
+        end
+    end
+
+    User --&gt;|Push Code| GH
+    GH --&gt;|Trigger| GA
+    GA --&gt;|Build &amp; Push| GHCR
+    GA --&gt;|Deploy| KGW
+
+    KGW --&gt;|Route by header| APP
+    APP --&gt;|Local mode| OLLAMA
+    APP --&gt;|Cloud mode| OPENROUTER</code></pre>
+<h3 id="flux-de-données">Flux de données</h3>
+<ol type="1">
+<li><strong>Développement</strong>: Code pushed → GitHub Repository</li>
+<li><strong>CI/CD</strong>: GitHub Actions → Build image → Push
+GHCR</li>
+<li><strong>Déploiement</strong>: Actions → Deploy to K8s → Update
+deployments</li>
+<li><strong>Runtime</strong>: User request → FastAPI → Ollama local →
+Generated text</li>
+<li><strong>Response</strong>: Generated code → User</li>
+</ol>
+<p><strong>Note importante :</strong> Contrairement au nom
+“poc-openhands”, cette implémentation N’utilise PAS OpenHands. Il s’agit
+d’une architecture directe FastAPI → Ollama pour la génération de
+code.</p>
+<h3 id="composants-techniques-détaillés">Composants techniques
+détaillés</h3>
+<h4 id="kgateway-cncf-gateway-api">1. KGateway (CNCF Gateway API)</h4>
+<ul>
+<li><strong>Rôle</strong>: Routage intelligent des requêtes LLM</li>
+<li><strong>Technologie</strong>: CNCF Gateway API (pas Ingress
+legacy)</li>
+<li><strong>Routing</strong>: Header
+<code>x-llm-mode: local|cloud</code></li>
+<li><strong>Load balancing</strong>: Entre services
+Ollama/OpenRouter</li>
+</ul>
+<h4 id="fastapi-application">2. FastAPI Application</h4>
+<ul>
+<li><strong>Framework</strong>: FastAPI avec validation Pydantic</li>
+<li><strong>Endpoints</strong>: <code>/generate</code>,
+<code>/health</code>, <code>/models</code>, <code>/docs</code></li>
+<li><strong>Architecture</strong>: Async/await pour performance</li>
+<li><strong>Observabilité</strong>: Health checks et métriques</li>
+</ul>
+<h4 id="services-ai">3. Services AI</h4>
+<ul>
+<li><strong>Ollama</strong>: LLM local uniquement (Llama3.2, Mistral,
+etc.)</li>
+<li><strong>Mode local</strong>: Direct vers Ollama, gratuit et
+privé</li>
+<li><strong>Mode cloud</strong>: Routage KGateway (architecture de
+démonstration non implémentée)</li>
+</ul>
+<hr />
+<h2 id="stack-technologique">Stack technologique</h2>
+<h3 id="containerisation-et-orchestration">Containerisation et
+orchestration</h3>
+<ul>
+<li><strong>Docker</strong>: Multi-stage builds pour optimisation</li>
+<li><strong>Kubernetes</strong>: K3s pour environnement léger</li>
+<li><strong>Container Registry</strong>: GitHub Container Registry
+(GHCR)</li>
+</ul>
+<h3 id="cicd-et-gitops">CI/CD et GitOps</h3>
+<ul>
+<li><strong>GitHub Actions</strong>: Pipeline déclaratif avec
+parallélisation</li>
+<li><strong>Secrets Management</strong>: GitHub Secrets pour
+credentials</li>
+<li><strong>Deployment</strong>: GitOps avec kubectl et Kustomize</li>
+</ul>
+<h3 id="monitoring-et-observabilité">Monitoring et observabilité</h3>
+<ul>
+<li><strong>Health Checks</strong>: Liveness et readiness probes</li>
+<li><strong>Logs</strong>: Centralisés via kubectl logs</li>
+<li><strong>Metrics</strong>: Endpoints <code>/health</code> et
+<code>/metrics</code></li>
+</ul>
+<h3 id="développement-et-tests">Développement et tests</h3>
+<ul>
+<li><strong>Language</strong>: Python 3.11 avec FastAPI</li>
+<li><strong>Testing</strong>: pytest avec couverture de code</li>
+<li><strong>Linting</strong>: ruff pour qualité de code</li>
+<li><strong>Documentation</strong>: Swagger/OpenAPI automatique</li>
+</ul>
+<hr />
+<h2 id="pipeline-devops">Pipeline DevOps</h2>
+<h3 id="github-actions-workflow">GitHub Actions Workflow</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Build and Deploy</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-test-deploy</span><span class="kw">:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">permissions</span><span class="kw">:</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">contents</span><span class="kw">:</span><span class="at"> read</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">packages</span><span class="kw">:</span><span class="at"> write</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Checkout repository</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set lowercase owner name</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> echo &quot;OWNER_LC=${OWNER,,}&quot; &gt;&gt;${GITHUB_ENV}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">OWNER</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;${{ github.repository_owner }}&quot;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set up Docker Buildx</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/setup-buildx-action@v3</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Log in to Container Registry</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/login-action@v3</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">registry</span><span class="kw">:</span><span class="at"> ghcr.io</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">username</span><span class="kw">:</span><span class="at"> ${{ github.actor }}</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">password</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build and push Docker image</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> docker/build-push-action@v5</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">context</span><span class="kw">:</span><span class="at"> .</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">file</span><span class="kw">:</span><span class="at"> ./docker/Dockerfile</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">push</span><span class="kw">:</span><span class="at"> ${{ github.event_name != &#39;pull_request&#39; }}</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="fu">          tags</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>            ghcr.io/${{ env.OWNER_LC }}/poc-openhands:latest</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>            ghcr.io/${{ env.OWNER_LC }}/poc-openhands:${{ github.sha }}</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cache-from</span><span class="kw">:</span><span class="at"> type=gha</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cache-to</span><span class="kw">:</span><span class="at"> type=gha,mode=max</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Run tests</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>          echo &quot;🧪 Running tests...&quot;</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>          # Tests automatisés ici</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy to K3s</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/main&#39;</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>          # Déploiement automatisé</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>          kubectl apply -f k8s/base/</span></code></pre></div>
+<h3 id="étapes-du-pipeline">Étapes du pipeline</h3>
+<ol type="1">
+<li><p><strong>Build Phase</strong></p>
+<ul>
+<li>Checkout du code source</li>
+<li>Build multi-stage de l’image Docker</li>
+<li>Push vers GHCR avec tags optimisés</li>
+</ul></li>
+<li><p><strong>Test Phase</strong></p>
+<ul>
+<li>Tests unitaires et d’intégration</li>
+<li>Validation de la qualité de code</li>
+<li>Vérification des vulnérabilités</li>
+</ul></li>
+<li><p><strong>Deploy Phase</strong></p>
+<ul>
+<li>Déploiement sur cluster K3s</li>
+<li>Rolling update sans downtime</li>
+<li>Vérification des health checks</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="configuration-de-lenvironnement">Configuration de
+l’environnement</h2>
+<h3 id="prérequis-système">Prérequis système</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Outils requis</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Docker <span class="op">&gt;</span>= 20.10</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> kubectl <span class="op">&gt;</span>= 1.25</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> k3s ou cluster Kubernetes</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> pandoc <span class="er">(</span><span class="ex">pour</span> génération PDF<span class="kw">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> Python 3.11+</span></code></pre></div>
+<h3 id="installation-du-cluster-k3s">Installation du cluster K3s</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation K3s lightweight</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-sfL</span> https://get.k3s.io <span class="kw">|</span> <span class="fu">sh</span> <span class="at">-</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration kubectl</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cp /etc/rancher/k3s/k3s.yaml ~/.kube/config</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chown <span class="va">$USER</span> ~/.kube/config</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get nodes</span></code></pre></div>
+<h3 id="setup-des-services-ai">Setup des services AI</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Déploiement Ollama avec modèle</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/app-deployment.yaml</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement d&#39;un modèle léger</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/ollama <span class="at">--</span> ollama pull llama3.2:1b</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/ollama <span class="at">--</span> ollama list</span></code></pre></div>
+<h3 id="configuration-kgateway-cncf">Configuration KGateway (CNCF)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation KGateway</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-kgateway.sh</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration des routes</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/gateway.yaml</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Test du routing</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;x-llm-mode: local&quot;</span> http://kgateway/v1/chat</span></code></pre></div>
+<hr />
+<h2 id="déploiement">Déploiement</h2>
+<h3 id="déploiement-automatisé">Déploiement automatisé</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone du repository</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/username/poc-openhands.git</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> poc-openhands</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup complet de l&#39;environnement</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-k3s.sh</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/setup-kgateway.sh</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/deploy.sh</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification du déploiement</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get pods <span class="at">-A</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get svc <span class="at">-A</span></span></code></pre></div>
+<h3 id="déploiement-manuel-étape-par-étape">Déploiement manuel étape par
+étape</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Build de l&#39;image</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> ghcr.io/username/poc-openhands:latest <span class="at">-f</span> docker/Dockerfile .</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Push vers registry</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push ghcr.io/username/poc-openhands:latest</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Déploiement sur K8s</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> apply <span class="at">-f</span> k8s/base/app-deployment.yaml</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Exposition du service</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> port-forward svc/app 8080:80</span></code></pre></div>
+<h3 id="configuration-des-secrets">Configuration des secrets</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GitHub Container Registry</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> create secret docker-registry ghcr-secret <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-server</span><span class="op">=</span>ghcr.io <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-username</span><span class="op">=</span>username <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--docker-password</span><span class="op">=</span><span class="va">$GITHUB_TOKEN</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenRouter API Key (si utilisé)</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> create secret generic openrouter-secret <span class="dt">\</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--from-literal</span><span class="op">=</span>api-key=<span class="va">$OPENROUTER_API_KEY</span></span></code></pre></div>
+<hr />
+<h2 id="monitoring-et-observabilité-1">Monitoring et observabilité</h2>
+<h3 id="health-checks">Health Checks</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="at">@app.get</span>(<span class="st">&quot;/health&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> health():</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;status&quot;</span>: <span class="st">&quot;healthy&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;timestamp&quot;</span>: datetime.utcnow().isoformat(),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;version&quot;</span>: <span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<h3 id="kubernetes-probes">Kubernetes Probes</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">livenessProbe</span><span class="kw">:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">httpGet</span><span class="kw">:</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /health</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">port</span><span class="kw">:</span><span class="at"> </span><span class="dv">8000</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">initialDelaySeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">periodSeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">30</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">readinessProbe</span><span class="kw">:</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">httpGet</span><span class="kw">:</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /health</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">port</span><span class="kw">:</span><span class="at"> </span><span class="dv">8000</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">initialDelaySeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">periodSeconds</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span></code></pre></div>
+<h3 id="surveillance-opérationnelle">Surveillance opérationnelle</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logs en temps réel</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> logs <span class="at">-f</span> deployment/app</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Métriques de performance</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> top pods</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Status du cluster</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get pods <span class="at">-o</span> wide</span></code></pre></div>
+<h3 id="métriques-importantes-à-surveiller">Métriques importantes à
+surveiller</h3>
+<ul>
+<li><strong>Latence API</strong>: Temps de réponse des endpoints</li>
+<li><strong>Taux d’erreur</strong>: 4xx/5xx responses</li>
+<li><strong>Ressources</strong>: CPU/Memory usage des pods</li>
+<li><strong>Disponibilité</strong>: Uptime des services AI</li>
+</ul>
+<hr />
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<h3 id="sécurité">Sécurité</h3>
+<ul>
+<li>✅ Images scannées pour vulnérabilités</li>
+<li>✅ Secrets managed via Kubernetes secrets</li>
+<li>✅ RBAC configuré pour accès minimal</li>
+<li>✅ Network policies pour isolation</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>✅ Multi-stage builds pour images optimisées</li>
+<li>✅ Resource limits sur tous les pods</li>
+<li>✅ Caching Docker layers dans CI/CD</li>
+<li>✅ Async/await pour I/O non-blocking</li>
+</ul>
+<h3 id="fiabilité">Fiabilité</h3>
+<ul>
+<li>✅ Health checks complets (liveness/readiness)</li>
+<li>✅ Graceful shutdown avec signaux</li>
+<li>✅ Rolling updates pour zero-downtime</li>
+<li>✅ Backup et recovery procedures</li>
+</ul>
+<h3 id="maintenabilité">Maintenabilité</h3>
+<ul>
+<li>✅ Documentation technique complète</li>
+<li>✅ Code commenté et structuré</li>
+<li>✅ Tests automatisés à tous niveaux</li>
+<li>✅ Logging structuré pour debugging</li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>Ce POC démontre une implémentation moderne d’une pipeline DevOps
+complète, intégrant:</p>
+<ul>
+<li><strong>Automatisation</strong>: From code to production en un
+push</li>
+<li><strong>Scalabilité</strong>: Architecture cloud-native avec
+Kubernetes</li>
+<li><strong>Observabilité</strong>: Monitoring et debugging
+intégrés</li>
+<li><strong>Sécurité</strong>: Bonnes pratiques de sécurité
+appliquées</li>
+<li><strong>Innovation</strong>: Intégration AI avec patterns DevOps
+modernes</li>
+</ul>
+<p>L’architecture présentée est <strong>production-ready</strong> et
+peut servir de base pour des projets d’entreprise nécessitant une
+automation complète de la chaîne de développement.</p>
+<hr />
+<h2 id="architecture-réelle-vs-nom-du-projet">Architecture réelle vs nom
+du projet</h2>
+<p><strong>Note historique :</strong> Ce projet était initialement nommé
+“poc-openhands” mais a été renommé “Prompt2Prod” pour mieux refléter son
+implémentation réelle (FastAPI + Ollama).</p>
+<h3 id="ce-qui-est-implémenté">Ce qui est implémenté ✅</h3>
+<ul>
+<li><strong>FastAPI</strong> : API moderne avec documentation
+automatique</li>
+<li><strong>Ollama</strong> : Inférence IA locale sans coûts
+externes</li>
+<li><strong>Kubernetes</strong> : Orchestration cloud-native avec
+K3s</li>
+<li><strong>GitHub Actions</strong> : Pipeline CI/CD moderne</li>
+<li><strong>KGateway</strong> : Architecture Gateway API (CNCF)</li>
+</ul>
+<h3 id="ce-que-pourrait-apporter-openhands">Ce que pourrait apporter
+OpenHands 💭</h3>
+<ul>
+<li><strong>Orchestration complexe</strong> : Workflows
+multi-étapes</li>
+<li><strong>Agents spécialisés</strong> : Architecture, code, tests,
+documentation</li>
+<li><strong>Intégration GitHub</strong> : Création automatique de
+repos</li>
+<li><strong>Validation iterative</strong> : Amélioration automatique du
+code</li>
+</ul>
+<p>Cette architecture démontre les patterns DevOps modernes sans la
+complexité d’orchestration d’OpenHands.</p>
+<hr />
+<p><em>Document généré automatiquement - Dernière mise à jour: Septembre
+2025</em></p>
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Équipe DevOps" />
+  <title>Guide Utilisateur POC Prompt2Prod</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Guide Utilisateur POC Prompt2Prod</h1>
+<p class="author">Équipe DevOps</p>
+<p class="date">septembre 2025</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#guide-utilisateur---prompt2prod"
+id="toc-guide-utilisateur---prompt2prod">Guide Utilisateur -
+Prompt2Prod</a>
+<ul>
+<li><a href="#documentation-fonctionnelle-et-cas-dusage"
+id="toc-documentation-fonctionnelle-et-cas-dusage">Documentation
+fonctionnelle et cas d’usage</a></li>
+<li><a href="#table-des-matières" id="toc-table-des-matières">Table des
+Matières</a></li>
+<li><a href="#introduction" id="toc-introduction">Introduction</a>
+<ul>
+<li><a href="#quest-ce-que-prompt2prod"
+id="toc-quest-ce-que-prompt2prod">Qu’est-ce que Prompt2Prod ?</a></li>
+<li><a href="#le-problème-résolu" id="toc-le-problème-résolu">Le
+problème résolu</a></li>
+<li><a href="#qui-peut-lutiliser" id="toc-qui-peut-lutiliser">Qui peut
+l’utiliser ?</a></li>
+</ul></li>
+<li><a href="#cas-dusage-principaux" id="toc-cas-dusage-principaux">Cas
+d’usage principaux</a>
+<ul>
+<li><a href="#génération-de-projets-complets"
+id="toc-génération-de-projets-complets">1. 🏗️ Génération de projets
+complets</a></li>
+<li><a href="#génération-dinterfaces-utilisateur"
+id="toc-génération-dinterfaces-utilisateur">2. 🎨 Génération
+d’interfaces utilisateur</a></li>
+<li><a href="#scripts-et-outils-de-développement"
+id="toc-scripts-et-outils-de-développement">3. 🐍 Scripts et outils de
+développement</a></li>
+<li><a href="#applications-mobiles" id="toc-applications-mobiles">4. 📱
+Applications mobiles</a></li>
+</ul></li>
+<li><a href="#guide-de-démarrage-rapide"
+id="toc-guide-de-démarrage-rapide">Guide de démarrage rapide</a>
+<ul>
+<li><a href="#étape-1-accéder-à-lapi"
+id="toc-étape-1-accéder-à-lapi">Étape 1: Accéder à l’API</a></li>
+<li><a href="#étape-2-première-génération"
+id="toc-étape-2-première-génération">Étape 2: Première
+génération</a></li>
+<li><a href="#étape-3-analyser-le-résultat"
+id="toc-étape-3-analyser-le-résultat">Étape 3: Analyser le
+résultat</a></li>
+<li><a href="#étape-4-itération-et-amélioration"
+id="toc-étape-4-itération-et-amélioration">Étape 4: Itération et
+amélioration</a></li>
+</ul></li>
+<li><a href="#utilisation-de-lapi"
+id="toc-utilisation-de-lapi">Utilisation de l’API</a>
+<ul>
+<li><a href="#interface-web-swagger"
+id="toc-interface-web-swagger">Interface Web (Swagger)</a></li>
+<li><a href="#modes-de-génération-disponibles"
+id="toc-modes-de-génération-disponibles">Modes de génération
+disponibles</a></li>
+</ul></li>
+<li><a href="#exemples-pratiques" id="toc-exemples-pratiques">Exemples
+pratiques</a>
+<ul>
+<li><a href="#exemple-1-api-de-blog-avec-authentification"
+id="toc-exemple-1-api-de-blog-avec-authentification">Exemple 1: API de
+blog avec authentification</a></li>
+<li><a href="#exemple-2-dashboard-react-avec-graphiques"
+id="toc-exemple-2-dashboard-react-avec-graphiques">Exemple 2: Dashboard
+React avec graphiques</a></li>
+<li><a href="#exemple-3-microservice-en-go"
+id="toc-exemple-3-microservice-en-go">Exemple 3: Microservice en
+Go</a></li>
+</ul></li>
+<li><a href="#bonnes-pratiques" id="toc-bonnes-pratiques">Bonnes
+pratiques</a>
+<ul>
+<li><a href="#rédaction-de-prompts-efficaces"
+id="toc-rédaction-de-prompts-efficaces">📝 Rédaction de prompts
+efficaces</a></li>
+<li><a href="#processus-ditération" id="toc-processus-ditération">🔄
+Processus d’itération</a></li>
+<li><a href="#sélection-du-bon-modèle"
+id="toc-sélection-du-bon-modèle">🎯 Sélection du bon modèle</a></li>
+</ul></li>
+<li><a href="#dépannage" id="toc-dépannage">Dépannage</a>
+<ul>
+<li><a href="#problèmes-courants-et-solutions"
+id="toc-problèmes-courants-et-solutions">Problèmes courants et
+solutions</a></li>
+<li><a href="#debug-et-monitoring" id="toc-debug-et-monitoring">Debug et
+monitoring</a></li>
+</ul></li>
+<li><a href="#faq" id="toc-faq">FAQ</a>
+<ul>
+<li><a href="#questions-générales"
+id="toc-questions-générales">Questions générales</a></li>
+<li><a href="#questions-techniques"
+id="toc-questions-techniques">Questions techniques</a></li>
+<li><a href="#questions-sur-la-performance"
+id="toc-questions-sur-la-performance">Questions sur la
+performance</a></li>
+</ul></li>
+<li><a href="#support-et-communauté"
+id="toc-support-et-communauté">Support et communauté</a>
+<ul>
+<li><a href="#comment-obtenir-de-laide"
+id="toc-comment-obtenir-de-laide">Comment obtenir de l’aide ?</a></li>
+<li><a href="#contribuer-au-projet"
+id="toc-contribuer-au-projet">Contribuer au projet</a></li>
+</ul></li>
+<li><a href="#à-propos-de-ce-poc" id="toc-à-propos-de-ce-poc">À propos
+de ce POC</a>
+<ul>
+<li><a href="#fonctionnalités-actuelles"
+id="toc-fonctionnalités-actuelles">Fonctionnalités actuelles</a></li>
+<li><a href="#limitations-du-poc"
+id="toc-limitations-du-poc">Limitations du POC</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="guide-utilisateur---prompt2prod">Guide Utilisateur -
+Prompt2Prod</h1>
+<h2 id="documentation-fonctionnelle-et-cas-dusage">Documentation
+fonctionnelle et cas d’usage</h2>
+<p><strong>Version:</strong> 1.0<br />
+<strong>Public cible:</strong> Développeurs, DevOps, Product
+Managers<br />
+<strong>Prérequis:</strong> Notions de base en développement</p>
+<hr />
+<h2 id="table-des-matières">Table des Matières</h2>
+<ol type="1">
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#cas-dusage-principaux">Cas d’usage principaux</a></li>
+<li><a href="#guide-de-démarrage-rapide">Guide de démarrage
+rapide</a></li>
+<li><a href="#utilisation-de-lapi">Utilisation de l’API</a></li>
+<li><a href="#exemples-pratiques">Exemples pratiques</a></li>
+<li><a href="#bonnes-pratiques">Bonnes pratiques</a></li>
+<li><a href="#dépannage">Dépannage</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<h3 id="quest-ce-que-prompt2prod">Qu’est-ce que Prompt2Prod ?</h3>
+<p><strong>Prompt2Prod</strong> est un Proof of Concept (POC)
+révolutionnaire qui transforme vos idées de projets logiciels en code
+prêt pour la production, simplement en décrivant ce que vous voulez
+créer en langage naturel.</p>
+<h3 id="le-problème-résolu">Le problème résolu</h3>
+<ul>
+<li>⏰ <strong>Temps de setup initial</strong> : Plus besoin de passer
+des heures à configurer l’architecture de base</li>
+<li>🔧 <strong>Boilerplate repetitif</strong> : Génération automatique
+du code de base</li>
+<li>📚 <strong>Documentation manquante</strong> : Code généré avec
+documentation intégrée</li>
+<li>🚀 <strong>Time-to-market</strong> : De l’idée au prototype
+fonctionnel en secondes</li>
+</ul>
+<h3 id="qui-peut-lutiliser">Qui peut l’utiliser ?</h3>
+<ul>
+<li><strong>Développeurs</strong> : Prototypage rapide
+d’applications</li>
+<li><strong>Product Managers</strong> : Validation d’idées avec des
+prototypes</li>
+<li><strong>Startups</strong> : MVP rapides pour validation marché</li>
+<li><strong>Formateurs</strong> : Création d’exemples de code pour
+l’apprentissage</li>
+<li><strong>DevOps</strong> : Templates d’infrastructure et
+déploiement</li>
+</ul>
+<hr />
+<h2 id="cas-dusage-principaux">Cas d’usage principaux</h2>
+<h3 id="génération-de-projets-complets">1. 🏗️ Génération de projets
+complets</h3>
+<p><strong>Exemple concret :</strong> Créer une API REST complète</p>
+<pre><code>Prompt: &quot;Create a Node.js Express API for a library management system with user authentication, book CRUD operations, and borrowing system&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Structure complète du projet -
+Configuration Express.js - Modèles de données (User, Book, Borrow) -
+Routes API RESTful - Middleware d’authentification JWT - Configuration
+de base de données MongoDB - Tests unitaires - Dockerfile et
+docker-compose.yml - README avec instructions de déploiement</p>
+<h3 id="génération-dinterfaces-utilisateur">2. 🎨 Génération
+d’interfaces utilisateur</h3>
+<p><strong>Exemple concret :</strong> Interface web moderne</p>
+<pre><code>Prompt: &quot;Create a React dashboard with TypeScript for an e-commerce admin panel with charts, product management, and order tracking&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Application React avec
+TypeScript - Composants réutilisables - Routing avec React Router - État
+global avec Context/Redux - Graphiques avec Chart.js - Interface
+responsive avec CSS moderne - Mock API pour les tests - Tests avec Jest
+et React Testing Library</p>
+<h3 id="scripts-et-outils-de-développement">3. 🐍 Scripts et outils de
+développement</h3>
+<p><strong>Exemple concret :</strong> Outil en ligne de commande</p>
+<pre><code>Prompt: &quot;Create a Python CLI tool for analyzing log files with filtering, statistics, and export to CSV&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Script Python avec argparse -
+Classes pour parsing des logs - Fonctions de filtrage avancées -
+Génération de statistiques - Export CSV/JSON - Tests unitaires avec
+pytest - Configuration setuptools - Documentation complète</p>
+<h3 id="applications-mobiles">4. 📱 Applications mobiles</h3>
+<p><strong>Exemple concret :</strong> App mobile simple</p>
+<pre><code>Prompt: &quot;Create a React Native todo app with offline storage and sync capabilities&quot;</code></pre>
+<p><strong>Résultat généré :</strong> - Structure React Native -
+Navigation avec React Navigation - Storage local avec AsyncStorage -
+Synchronisation avec API - Interface utilisateur moderne - Gestion
+d’état avec hooks - Build scripts pour iOS/Android</p>
+<hr />
+<h2 id="guide-de-démarrage-rapide">Guide de démarrage rapide</h2>
+<h3 id="étape-1-accéder-à-lapi">Étape 1: Accéder à l’API</h3>
+<p>L’API est accessible à l’adresse : <code>http://localhost:8080</code>
+une fois déployée.</p>
+<h3 id="étape-2-première-génération">Étape 2: Première génération</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test simple avec curl</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a simple Python hello world script with documentation&quot;,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="étape-3-analyser-le-résultat">Étape 3: Analyser le résultat</h3>
+<p>La réponse contient : - <strong>Code généré</strong> : Prêt à être
+utilisé - <strong>Documentation</strong> : Explications intégrées -
+<strong>Instructions</strong> : Comment exécuter/déployer -
+<strong>Métadonnées</strong> : Modèle utilisé, temps de génération</p>
+<h3 id="étape-4-itération-et-amélioration">Étape 4: Itération et
+amélioration</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Affinage du prompt pour plus de détails</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a Python hello world script with argument parsing, logging, and unit tests&quot;,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;llama3.2:1b&quot;,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<hr />
+<h2 id="utilisation-de-lapi">Utilisation de l’API</h2>
+<h3 id="interface-web-swagger">Interface Web (Swagger)</h3>
+<p>La façon la plus simple d’utiliser l’API est via l’interface Swagger
+:</p>
+<ol type="1">
+<li>Ouvrez <code>http://localhost:8080/docs</code></li>
+<li>Cliquez sur l’endpoint <code>/generate</code></li>
+<li>Cliquez sur “Try it out”</li>
+<li>Saisissez votre prompt</li>
+<li>Exécutez la requête</li>
+<li>Copiez le code généré</li>
+</ol>
+<h3 id="modes-de-génération-disponibles">Modes de génération
+disponibles</h3>
+<h4 id="mode-local-mode-local">Mode Local
+(<code>"mode": "local"</code>)</h4>
+<p><strong>Avantages :</strong> - ✅ Gratuit et illimité - ✅ Données
+privées (pas d’envoi vers le cloud) - ✅ Latence faible - ✅ Fonctionne
+offline</p>
+<p><strong>Inconvénients :</strong> - ❌ Qualité variable selon le
+modèle - ❌ Limité pour des tâches très complexes - ❌ Consomme des
+ressources locales</p>
+<p><strong>Modèles recommandés :</strong> - <code>llama3.2:1b</code> :
+Ultra-rapide, idéal pour prototypage - <code>mistral:7b</code> :
+Équilibré qualité/performance - <code>codellama:13b</code> : Spécialisé
+développement</p>
+<h4 id="mode-cloud-mode-cloud">Mode Cloud
+(<code>"mode": "cloud"</code>)</h4>
+<p><strong>Avantages :</strong> - ✅ Très haute qualité de génération -
+✅ Gestion de projets complexes - ✅ Modèles spécialisés disponibles -
+✅ Pas de consommation locale</p>
+<p><strong>Inconvénients :</strong> - ❌ Coût par utilisation - ❌
+Dépendance réseau - ❌ Données envoyées vers le cloud - ❌ Latence plus
+élevée</p>
+<p><strong>Modèles recommandés :</strong> - <code>gpt-4</code> :
+Excellence pour projets complexes - <code>claude-3-sonnet</code> :
+Excellent pour le code - <code>gpt-3.5-turbo</code> : Rapport
+qualité/prix optimal</p>
+<hr />
+<h2 id="exemples-pratiques">Exemples pratiques</h2>
+<h3 id="exemple-1-api-de-blog-avec-authentification">Exemple 1: API de
+blog avec authentification</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a FastAPI blog application with:
+- User authentication using JWT tokens
+- CRUD operations for blog posts
+- Comment system with moderation
+- PostgreSQL database with SQLAlchemy
+- API documentation with examples
+- Docker configuration for deployment
+- Basic frontend with HTML templates</code></pre>
+<p><strong>Utilisation :</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-X</span> POST <span class="st">&quot;http://localhost:8080/generate&quot;</span> <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-d</span> <span class="st">&#39;{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;prompt&quot;: &quot;Create a FastAPI blog application with: - User authentication using JWT tokens - CRUD operations for blog posts - Comment system with moderation - PostgreSQL database with SQLAlchemy - API documentation with examples - Docker configuration for deployment - Basic frontend with HTML templates&quot;,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;model&quot;: &quot;mistral:7b&quot;,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;mode&quot;: &quot;local&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span></span></code></pre></div>
+<h3 id="exemple-2-dashboard-react-avec-graphiques">Exemple 2: Dashboard
+React avec graphiques</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a React TypeScript dashboard application featuring:
+- Modern Material-UI design
+- Real-time data visualization with Chart.js
+- User management interface
+- Responsive layout for mobile/desktop
+- API integration with axios
+- State management with Redux Toolkit
+- Unit tests with Jest and React Testing Library
+- Webpack configuration for production build</code></pre>
+<h3 id="exemple-3-microservice-en-go">Exemple 3: Microservice en Go</h3>
+<p><strong>Prompt optimisé :</strong></p>
+<pre><code>Create a Go microservice for user management with:
+- RESTful API using Gin framework
+- PostgreSQL database with GORM
+- JWT authentication middleware
+- Input validation and error handling
+- Structured logging with logrus
+- Health check endpoints
+- Docker multi-stage build
+- Kubernetes deployment manifests
+- Unit and integration tests</code></pre>
+<hr />
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<h3 id="rédaction-de-prompts-efficaces">📝 Rédaction de prompts
+efficaces</h3>
+<h4 id="do---bonnes-pratiques">✅ DO - Bonnes pratiques</h4>
+<ol type="1">
+<li><p><strong>Soyez spécifique :</strong></p>
+<pre><code>❌ &quot;Create a web app&quot;
+✅ &quot;Create a React e-commerce app with product catalog, shopping cart, and checkout&quot;</code></pre></li>
+<li><p><strong>Mentionnez la stack technique :</strong></p>
+<pre><code>❌ &quot;Create a database app&quot;
+✅ &quot;Create a Python Flask app with PostgreSQL database and SQLAlchemy ORM&quot;</code></pre></li>
+<li><p><strong>Demandez la documentation :</strong></p>
+<pre><code>✅ &quot;Include API documentation and setup instructions&quot;</code></pre></li>
+<li><p><strong>Spécifiez les fonctionnalités :</strong></p>
+<pre><code>✅ &quot;With user authentication, CRUD operations, and search functionality&quot;</code></pre></li>
+<li><p><strong>Mentionnez les tests :</strong></p>
+<pre><code>✅ &quot;Include unit tests and example usage&quot;</code></pre></li>
+</ol>
+<h4 id="dont---à-éviter">❌ DON’T - À éviter</h4>
+<ol type="1">
+<li><p><strong>Prompts trop vagues :</strong></p>
+<pre><code>❌ &quot;Make something cool&quot;
+❌ &quot;Create an app&quot;</code></pre></li>
+<li><p><strong>Trop de technologies incompatibles :</strong></p>
+<pre><code>❌ &quot;Use React, Vue, Angular, and jQuery together&quot;</code></pre></li>
+<li><p><strong>Demandes irréalisables :</strong></p>
+<pre><code>❌ &quot;Create the next Facebook in one request&quot;</code></pre></li>
+</ol>
+<h3 id="processus-ditération">🔄 Processus d’itération</h3>
+<ol type="1">
+<li><p><strong>Démarrez simple :</strong></p>
+<pre><code>&quot;Create a basic Python web API with Flask&quot;</code></pre></li>
+<li><p><strong>Ajoutez des détails :</strong></p>
+<pre><code>&quot;Create a Python Flask API for user management with SQLite database&quot;</code></pre></li>
+<li><p><strong>Précisez les fonctionnalités :</strong></p>
+<pre><code>&quot;Create a Python Flask API for user management with SQLite database, JWT authentication, and CRUD endpoints&quot;</code></pre></li>
+<li><p><strong>Finalisez avec la production :</strong></p>
+<pre><code>&quot;Create a production-ready Python Flask API for user management with PostgreSQL, JWT authentication, CRUD endpoints, logging, and Docker configuration&quot;</code></pre></li>
+</ol>
+<h3 id="sélection-du-bon-modèle">🎯 Sélection du bon modèle</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Type de projet</th>
+<th>Complexité</th>
+<th>Modèle recommandé</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scripts simples</td>
+<td>Faible</td>
+<td><code>llama3.2:1b</code></td>
+<td>Local</td>
+</tr>
+<tr class="even">
+<td>APIs standards</td>
+<td>Moyenne</td>
+<td><code>mistral:7b</code></td>
+<td>Local</td>
+</tr>
+<tr class="odd">
+<td>Apps complètes</td>
+<td>Moyenne</td>
+<td><code>codellama:13b</code></td>
+<td>Local</td>
+</tr>
+<tr class="even">
+<td>Architectures complexes</td>
+<td>Élevée</td>
+<td><code>gpt-4</code></td>
+<td>Cloud</td>
+</tr>
+<tr class="odd">
+<td>Code critique</td>
+<td>Élevée</td>
+<td><code>claude-3-sonnet</code></td>
+<td>Cloud</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dépannage">Dépannage</h2>
+<h3 id="problèmes-courants-et-solutions">Problèmes courants et
+solutions</h3>
+<h4 id="erreur-model-not-found">🚫 Erreur “Model not found”</h4>
+<p><strong>Symptôme :</strong>
+<code>{"detail": "Model 'xyz' not available"}</code></p>
+<p><strong>Solutions :</strong> 1. Vérifier les modèles disponibles :
+<code>bash    curl http://localhost:8080/models</code> 2. Utiliser un
+modèle existant 3. Charger le modèle manquant :
+<code>bash    kubectl exec deployment/ollama -- ollama pull model-name</code></p>
+<h4 id="timeouts-fréquents">⏱️ Timeouts fréquents</h4>
+<p><strong>Symptôme :</strong>
+<code>{"detail": "LLM timeout"}</code></p>
+<p><strong>Solutions :</strong> 1. Simplifier le prompt 2. Utiliser un
+modèle plus léger (<code>llama3.2:1b</code>) 3. Diviser en plusieurs
+requêtes 4. Passer en mode cloud pour les gros projets</p>
+<h4 id="erreur-de-connexion">🔌 Erreur de connexion</h4>
+<p><strong>Symptôme :</strong> <code>Connection refused</code> ou
+<code>Service unavailable</code></p>
+<p><strong>Solutions :</strong> 1. Vérifier que les services sont
+démarrés : <code>bash    kubectl get pods -A</code> 2. Redémarrer les
+services : <code>bash    kubectl rollout restart deployment/app</code>
+3. Vérifier les logs :
+<code>bash    kubectl logs deployment/app</code></p>
+<h4 id="réponses-de-mauvaise-qualité">📝 Réponses de mauvaise
+qualité</h4>
+<p><strong>Symptômes :</strong> Code incomplet, erreurs de syntaxe</p>
+<p><strong>Solutions :</strong> 1. Améliorer la précision du prompt 2.
+Utiliser un modèle plus performant 3. Passer en mode cloud 4. Demander
+explicitement la documentation 5. Spécifier la version des
+technologies</p>
+<h3 id="debug-et-monitoring">Debug et monitoring</h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier l&#39;état de l&#39;API</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://localhost:8080/health</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Voir les logs en temps réel</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> logs <span class="at">-f</span> deployment/app</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérifier les ressources</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> top pods</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de connectivité</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> exec deployment/app <span class="at">--</span> curl <span class="at">-I</span> http://ollama:11434</span></code></pre></div>
+<hr />
+<h2 id="faq">FAQ</h2>
+<h3 id="questions-générales">Questions générales</h3>
+<p><strong>Q: L’API est-elle gratuite ?</strong> R: Oui, ce POC est
+entièrement gratuit. Il utilise Ollama localement sans coûts
+externes.</p>
+<p><strong>Q: Peut-on utiliser l’API pour des projets commerciaux
+?</strong> R: Oui, vérifiez simplement les licences des modèles
+utilisés.</p>
+<p><strong>Q: Quelle est la limite de taille des prompts ?</strong> R:
+Les prompts peuvent contenir jusqu’à 4000 caractères pour un résultat
+optimal.</p>
+<p><strong>Q: Le code généré est-il sécurisé ?</strong> R: Le code suit
+les bonnes pratiques basiques, mais un audit de sécurité est recommandé
+pour la production.</p>
+<h3 id="questions-techniques">Questions techniques</h3>
+<p><strong>Q: Comment ajouter un nouveau modèle ?</strong> R:
+Connectez-vous au pod Ollama et utilisez
+<code>ollama pull model-name</code>.</p>
+<p><strong>Q: Peut-on personnaliser les réponses ?</strong> R:
+Actuellement non, mais vous pouvez affiner vos prompts pour obtenir le
+style souhaité.</p>
+<p><strong>Q: Y a-t-il une limite de requêtes par minute ?</strong> R:
+Non, mais les ressources système peuvent limiter la performance.</p>
+<p><strong>Q: L’API sauvegarde-t-elle les générations ?</strong> R: Non,
+ce POC ne sauvegarde pas l’historique. C’est une fonctionnalité à
+implémenter si nécessaire.</p>
+<h3 id="questions-sur-la-performance">Questions sur la performance</h3>
+<p><strong>Q: Quel est le temps de réponse moyen ?</strong> R: Mode
+local : 2-60 secondes selon la complexité du prompt et le modèle
+utilisé</p>
+<p><strong>Q: Comment optimiser les performances ?</strong> R: -
+Utilisez des modèles adaptés à la complexité - Gardez les prompts concis
+mais précis - Utilisez le mode local pour les tâches simples</p>
+<p><strong>Q: L’API peut-elle gérer plusieurs utilisateurs ?</strong> R:
+Oui, l’architecture async permet la gestion de requêtes
+concurrentes.</p>
+<hr />
+<h2 id="support-et-communauté">Support et communauté</h2>
+<h3 id="comment-obtenir-de-laide">Comment obtenir de l’aide ?</h3>
+<ol type="1">
+<li><strong>Documentation</strong> : Consultez d’abord cette
+documentation</li>
+<li><strong>Issues GitHub</strong> : Signalez les bugs ou demandez des
+fonctionnalités</li>
+<li><strong>Logs</strong> : Consultez les logs pour diagnostiquer les
+problèmes</li>
+<li><strong>Tests</strong> : Utilisez l’interface Swagger pour tester
+interactivement</li>
+</ol>
+<h3 id="contribuer-au-projet">Contribuer au projet</h3>
+<ul>
+<li>🐛 <strong>Signaler des bugs</strong> via GitHub Issues</li>
+<li>💡 <strong>Suggérer des améliorations</strong> avec des cas d’usage
+concrets</li>
+<li>📚 <strong>Améliorer la documentation</strong> avec vos retours
+d’expérience</li>
+<li>🧪 <strong>Partager vos prompts réussis</strong> pour aider la
+communauté</li>
+</ul>
+<hr />
+<h2 id="à-propos-de-ce-poc">À propos de ce POC</h2>
+<p>Ce <strong>Prompt2Prod</strong> est une démonstration d’architecture
+DevOps moderne intégrant l’IA.</p>
+<h3 id="fonctionnalités-actuelles">Fonctionnalités actuelles</h3>
+<ul>
+<li>✅ <strong>Génération de code</strong> via modèles Ollama
+locaux</li>
+<li>✅ <strong>API FastAPI</strong> avec documentation Swagger</li>
+<li>✅ <strong>Architecture Kubernetes</strong> cloud-native</li>
+<li>✅ <strong>Pipeline CI/CD</strong> avec GitHub Actions</li>
+<li>✅ <strong>Routage intelligent</strong> via KGateway</li>
+</ul>
+<h3 id="limitations-du-poc">Limitations du POC</h3>
+<ul>
+<li>⚠️ Pas de sauvegarde d’historique</li>
+<li>⚠️ Mode cloud non implémenté (architecture seulement)</li>
+<li>⚠️ Pas d’authentification</li>
+<li>⚠️ Génération limitée aux capacités d’Ollama local</li>
+</ul>
+<hr />
+<p><em>Guide utilisateur généré automatiquement - Dernière mise à jour:
+Septembre 2025</em></p>
+</body>
+</html>

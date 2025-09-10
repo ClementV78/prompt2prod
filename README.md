@@ -1,269 +1,164 @@
-# Prompt2Prod -##
+# Prompt2Prod
 
-## 🎯 Overview
+## 🎯 Vue d'ensemble
 
-Prompt2Prod is a proof-of-concept DevOps platform that transforms natural language prompts into production-ready GitHub projects. It leverages OpenHands orchestration along with local (Ollama) and cloud (OpenRouter) AI models to generate, configure, and deploy complete project structures with built-in CI/CD pipelines, infrastructure as code, and cloud-native best practices.
+**Prompt2Prod** est un système DevOps qui génère du code à partir de prompts en langage naturel en utilisant une architecture cloud-native moderne.
 
-### Key Features
+### Fonctionnalités
 
-- **Automated Project Generation**: Create GitHub projects from natural language prompts
-- **Multi-LLM Orchestration**: Combine local models (Ollama) and cloud models (OpenRouter) for optimal results
-- **Intelligent Project Scaffolding**: Generate proper project structure, CI/CD, and documentation
-- **Cloud-Native Architecture**: Kubernetes-based deployment for scalability
-- **GitOps Integration**: Direct integration with GitHub for repository management
-- **Smart Model Selection**: Automatically choose between local/cloud models based on task complexity
+- **Génération de code** via modèles Ollama locaux
+- **API moderne** FastAPI avec documentation Swagger
+- **Architecture Kubernetes** cloud-native
+- **Pipeline CI/CD** avec GitHub Actions
+- **Routage intelligent** via KGateway (CNCF Gateway API)
 
-🚀 Quick Start
+## 🚀 Démarrage rapide
 
-`````bash
-# 1. Clone the repository
+```bash
+# 1. Cloner le repository
 git clone https://github.com/ClementV78/prompt2prod.git
 cd prompt2prod
 
-# 2. Setup environment variables
-export OPENROUTER_API_KEY="your-openrouter-api-key"
-export GITHUB_TOKEN="your-github-token"
+# 2. Setup infrastructure
+./scripts/setup-k3s.sh          # Setup cluster Kubernetes
+./scripts/setup-kgateway.sh     # Setup Gateway API
+./scripts/deploy.sh             # Déployer les services
 
-# 3. Setup infrastructure
-./scripts/setup-k3s.sh          # Setup Kubernetes cluster
-./scripts/setup-kgateway.sh     # Setup Kubernetes Gateway API
-./scripts/setup-secrets.sh      # Configure API keys and tokens
-
-# 4. Deploy components
-kubectl apply -k k8s/base       # Deploy all components
-./scripts/setup-ollama-models.sh # Load AI models
-
-# 5. Access OpenHands UI
-kubectl get svc -n poc-openhands kgateway # Get the UI URLroduction
-
-## 🚀 Quick Start
-
-````bash
-# 1. Initialize the project
-./init-project.sh
-
-# 2. Setup Kubernetes cluster
-./scripts/setup-k3s.sh
-
-# 3. Setup Kubernetes Gateway API
-./scripts/setup-kgateway.sh
-
-# 4. Setup Ollama models
+# 3. Charger les modèles IA
 ./scripts/setup-ollama-models.sh
 
-# 5. Deploy services
-./scripts/deploy.sh
+# 4. Tester l'API
+curl -X POST "http://localhost:8080/generate" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Create a Python hello world script", "model": "llama3.2:1b", "mode": "local"}'
+```
 
-# 6. Run tests
-./scripts/test.sh
-
-## � Prerequisites
+## 📋 Prérequis
 
 - Docker
-- kubectl
-- k3s (or any Kubernetes cluster)
-- Python 3.x
-- Helm (for KGateway installation)
+- kubectl 
+- k3s (ou cluster Kubernetes)
+- Python 3.11+
 
-Install Python dependencies:
 ```bash
-# For development
+# Dependencies Python
 pip install -r requirements.txt
-
-# For testing
-pip install -r requirements-test.txt
-`````
-
-## �📁 Structure
-
-```
-poc-openhands/
-├── .github/workflows/  # CI/CD with GitHub Actions
-├── src/               # Source code
-├── k8s/               # Kubernetes manifests
-├── docker/            # Dockerfiles
-├── scripts/           # Utility scripts
-├── tests/            # Test suites
-└── docs/             # Documentation
+pip install -r requirements-test.txt  # Pour les tests
 ```
 
-## 🛠️ Technical Stack & Architecture
-
-### Core Technologies
-
-- **Project Generation**:
-
-  - **Orchestration**: OpenHands (AI workflow orchestration)
-  - **Local Models**: Ollama (Llama3, Mistral, CodeLlama) for code generation
-  - **Cloud Models**: OpenRouter (GPT-4, Claude) for architecture decisions
-
-- **Infrastructure & Deployment**:
-
-  - **Container Orchestration**: K3s (Lightweight Kubernetes)
-  - **API Gateway**: KGateway (CNCF-based routing & load balancing)
-  - **Container Registry**: GitHub Container Registry (GHCR)
-  - **Infrastructure**: Infrastructure as Code (IaC) with Kubernetes manifests
-
-- **CI/CD & Automation**:
-  - **Pipeline**: GitHub Actions with GitOps workflow
-  - **Quality**: Automated testing, linting, and security scanning
-  - **Deployment**: Automated Kubernetes deployments
-  - **Monitoring**: Prometheus metrics collection
-
-### Architecture Diagram
+## 📁 Structure
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Browser    │────▶│   KGateway   │────▶│  OpenHands   │
-│              │     │   (Ingress)  │     │ Orchestrator │
-└──────────────┘     └──────────────┘     └──────────────┘
-                                                 │
-                                         ┌───────┴───────┐
-                                         │               │
-                                   ┌──────────┐   ┌──────────┐
-                                   │  Ollama  │   │OpenRouter │
-                                   │ (Local)  │   │ (Cloud)  │
-                                   └──────────┘   └──────────┘
-                                         │               │
-                                         └───────┬───────┘
-                                                 │
-                                         ┌──────────────┐
-                                         │   GitHub     │
-                                         │     API      │
-                                         └──────────────┘
+prompt2prod/
+├── .github/workflows/     # CI/CD GitHub Actions
+├── src/api/              # API FastAPI
+├── k8s/base/             # Manifests Kubernetes  
+├── docker/               # Dockerfile
+├── scripts/              # Scripts d'automatisation
+├── tests/                # Tests unitaires
+└── docs/                 # Documentation complète
 ```
 
-### Key Components
+## 🛠️ Architecture technique
 
-- **OpenHands Web UI**: Interface principale pour la génération de projets
-- **KGateway**: Gestion du trafic entrant et routage des services (CNCF Ingress alternative)
-- **AI Models**:
-  - **Local**: Ollama (Llama3, Mistral, CodeLlama) pour la génération de code
-  - **Cloud**: OpenRouter (GPT-4, Claude) pour le raisonnement complexe
-- **GitHub Integration**: Création et configuration automatique des repositories
-- **Prometheus Metrics**: Monitoring des performances et de l'utilisation des modèles
+### Stack technologique
 
-## 📋 Configuration & Deployment
+- **API**: FastAPI avec validation Pydantic
+- **IA**: Ollama local (Llama3.2, Mistral, CodeLlama)
+- **Orchestration**: Kubernetes avec K3s
+- **Routage**: KGateway (CNCF Gateway API)
+- **CI/CD**: GitHub Actions + GHCR
+- **Containerisation**: Docker multi-stage builds
 
-### Environment Setup
+### Architecture
+
+```
+User → FastAPI → Ollama → Generated Code
+  ↓
+GitHub Actions → GHCR → Kubernetes
+```
+
+### Composants déployés
+
+- **FastAPI App**: API de génération de code
+- **Ollama**: Service IA local 
+- **KGateway**: Routage et load balancing
+- **Monitoring**: Health checks et observabilité
+
+## 🧪 Tests
 
 ```bash
-# Required environment variables
-export OPENROUTER_API_KEY="sk-..."
-export KUBECONFIG="~/.kube/config"
-```
+# Tests unitaires
+pytest tests/unit/
 
-### GitHub Secrets Configuration
-
-- `KUBECONFIG`: K3s configuration (base64 encoded)
-- `OPENROUTER_API_KEY`: OpenRouter API key for cloud models
-- `GHCR_TOKEN`: GitHub Container Registry access token
-
-### Security Considerations
-
-- Secrets management using Kubernetes Secrets
-- RBAC configuration for service accounts
-- Network policies for pod-to-pod communication
-- TLS encryption for API endpoints
-
-## 🧪 Testing & Quality Assurance
-
-### Automated Testing
-
-```bash
-# Unit tests with coverage
-pytest tests/unit/ --cov
-
-# Integration tests
+# Tests d'intégration
 ./scripts/test.sh
 
-# Load testing
-k6 run tests/performance/load-test.js
+# Test API direct
+curl http://localhost:8080/health
 ```
 
-### Manual Testing
+## 📊 Monitoring
 
 ```bash
-# Test API endpoint
-curl -X POST http://localhost:8000/generate \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Hello", "model": "mistral", "mode": "local"}'
-```
+# Status des pods
+kubectl get pods -A
 
-### CI/CD Pipeline Stages
-
-1. Code linting and formatting
-2. Unit tests and coverage analysis
-3. Container build and security scan
-4. Integration tests
-5. Performance testing
-6. Automated deployment
-
-## 📊 Monitoring & Observability
-
-```bash
-# Voir les pods
-kubectl get pods -w
+# Logs de l'application
+kubectl logs -f deployment/app
 
 # Logs Ollama
 kubectl logs -f deployment/ollama
 
-# Logs application
+# Models disponibles
+kubectl exec deployment/ollama -- ollama list
+```
+
+## 📝 Documentation
+
+- **[🏗️ Architecture](docs/html/architecture.html)** - Guide DevOps complet
+- **[🔌 API Reference](docs/html/api-reference.html)** - Documentation des endpoints
+- **[👤 Guide Utilisateur](docs/html/user-guide.html)** - Guide fonctionnel
+- **[📖 Documentation complète](docs/html/index.html)** - Interface d'accueil
+
+## 🔧 Développement
+
+```bash
+# Déploiement local
+kubectl apply -f k8s/base/
+
+# Rebuild et redéploiement
+docker build -t ghcr.io/clementv78/prompt2prod:latest -f docker/Dockerfile .
+kubectl rollout restart deployment/app
+
+# Accès aux logs
 kubectl logs -f deployment/app
 ```
 
-## 🔧 Development Workflow
-
-### Git Flow
+## ⚡ Exemple d'utilisation
 
 ```bash
-# Create feature branch
-git checkout -b feature/new-feature
+# Génération simple
+curl -X POST "http://localhost:8080/generate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Create a Python FastAPI hello world",
+    "model": "llama3.2:1b", 
+    "mode": "local"
+  }'
 
-# Commit changes following conventional commits
-git add .
-git commit -m "feat: implement new feature"
-git push -u origin feature/new-feature
-
-# Create PR
-gh pr create --title "feat: New Feature Implementation" --body "Description of changes"
+# Interface Swagger
+open http://localhost:8080/docs
 ```
 
-### Local Development
-
-```bash
-# Start local k3s cluster
-./scripts/setup-k3s.sh
-
-# Deploy services locally
-./scripts/deploy.sh --env=dev
-
-# Watch for changes
-kubectl get pods -w
-```
-
-### Best Practices
-
-- Conventional Commits for clear history
-- Branch protection rules
-- Required PR reviews
-- Automated testing on PR
-- GitOps workflow with ArgoCD/Flux
-
-## 📝 Documentation & Resources
-
-- [Architecture](docs/architecture.md)
-- [Guide de déploiement](docs/deployment.md)
-- [API Reference](docs/api.md)
-
-## 📄 License
+## 📄 Licence
 
 MIT
 
-## 👥 Contributeurs
+## 🚀 Status
 
-- Votre nom ici
+✅ **Production Ready** - Architecture DevOps moderne avec patterns cloud-native
 
 ---
 
-**Status**: 🚧 POC en développement
+**Note**: Ce projet démontre une architecture DevOps complète intégrant l'IA locale sans dépendances externes payantes.

@@ -1,0 +1,386 @@
+/* CSS pour les documents HTML générés par Pandoc */
+
+:root {
+  --primary-blue: #00529B;
+  --secondary-blue: #337AB7;
+  --light-gray: #F5F5F5;
+  --dark-gray: #555555;
+  --success-green: #5CB85C;
+  --warning-orange: #F0AD4E;
+  --danger-red: #D9534F;
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Typographie */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Liberation Sans', Arial, sans-serif;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+h1 {
+  color: var(--primary-blue);
+  font-size: 2.5rem;
+  border-bottom: 3px solid var(--primary-blue);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: var(--secondary-blue);
+  font-size: 2rem;
+  border-bottom: 2px solid var(--secondary-blue);
+  padding-bottom: 0.3rem;
+}
+
+h3 {
+  color: var(--dark-gray);
+  font-size: 1.5rem;
+}
+
+h4 {
+  color: var(--dark-gray);
+  font-size: 1.2rem;
+}
+
+/* Paragraphes et texte */
+p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+/* Listes */
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Liens */
+a {
+  color: var(--secondary-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--secondary-blue);
+}
+
+a:hover {
+  color: var(--primary-blue);
+  border-bottom-color: var(--primary-blue);
+}
+
+/* Code */
+code {
+  background-color: var(--light-gray);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+pre {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--primary-blue);
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Blocs de code avec syntaxe */
+.sourceCode {
+  background-color: #f8f8f8 !important;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem !important;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+div.sourceCode {
+  background-color: #f8f8f8 !important;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem !important;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Code dans sourceCode */
+.sourceCode pre {
+  background-color: transparent !important;
+  border: none;
+  border-left: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sourceCode code {
+  background-color: transparent !important;
+  padding: 0;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Tableaux */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: var(--primary-blue);
+  color: white;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Citations */
+blockquote {
+  border-left: 4px solid var(--secondary-blue);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--dark-gray);
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Boîtes d'information */
+.info-box {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.warning-box {
+  background-color: #fff8e1;
+  border-left: 4px solid #ff9800;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.success-box {
+  background-color: #e8f5e8;
+  border-left: 4px solid #4caf50;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.error-box {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Table des matières */
+#TOC {
+  background-color: var(--light-gray);
+  padding: 1.5rem;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+  border: 1px solid #ddd;
+}
+
+#TOC ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#TOC li {
+  margin-bottom: 0.3rem;
+}
+
+#TOC > ul > li {
+  font-weight: 600;
+}
+
+/* Badges et tags */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 12px;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.badge-success {
+  background-color: var(--success-green);
+}
+
+.badge-warning {
+  background-color: var(--warning-orange);
+}
+
+.badge-error {
+  background-color: var(--danger-red);
+}
+
+.badge-info {
+  background-color: var(--secondary-blue);
+}
+
+/* Icônes emoji */
+.emoji {
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  table {
+    font-size: 0.8rem;
+  }
+  
+  pre {
+    padding: 0.5rem;
+  }
+}
+
+/* Impression */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  
+  pre, blockquote {
+    page-break-inside: avoid;
+  }
+  
+  a {
+    color: black;
+    border-bottom: none;
+  }
+  
+  .info-box, .warning-box, .success-box, .error-box {
+    border: 1px solid #ccc;
+    background-color: white;
+  }
+}
+
+/* Animation subtile */
+a, .badge {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Header fixe pour navigation */
+.document-header {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 1rem;
+  margin: -2rem -2rem 2rem -2rem;
+  border-radius: 0;
+}
+
+.document-header h1 {
+  color: white;
+  border-bottom: none;
+  margin: 0;
+}
+
+/* Coloration syntaxique Pygments */
+.sourceCode .kw { color: #007020; font-weight: bold; } /* Keyword */
+.sourceCode .dt { color: #902000; } /* DataType */
+.sourceCode .dv { color: #40a070; } /* DecVal */
+.sourceCode .bn { color: #40a070; } /* BaseN */
+.sourceCode .fl { color: #40a070; } /* Float */
+.sourceCode .ch { color: #4070a0; } /* Char */
+.sourceCode .st { color: #4070a0; } /* String */
+.sourceCode .co { color: #60a0b0; font-style: italic; } /* Comment */
+.sourceCode .ot { color: #007020; } /* Other */
+.sourceCode .al { color: #ff0000; font-weight: bold; } /* Alert */
+.sourceCode .fu { color: #06287e; } /* Function */
+.sourceCode .er { color: #ff0000; font-weight: bold; } /* Error */
+.sourceCode .wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+.sourceCode .cn { color: #880000; } /* Constant */
+.sourceCode .sc { color: #4070a0; } /* SpecialChar */
+.sourceCode .vs { color: #4070a0; } /* VerbatimString */
+.sourceCode .ss { color: #bb6688; } /* SpecialString */
+.sourceCode .im { } /* Import */
+.sourceCode .va { color: #19177c; } /* Variable */
+.sourceCode .cf { color: #007020; font-weight: bold; } /* ControlFlow */
+.sourceCode .op { color: #666666; } /* Operator */
+.sourceCode .bu { } /* BuiltIn */
+.sourceCode .ex { } /* Extension */
+.sourceCode .pp { color: #bc7a00; } /* Preprocessor */
+.sourceCode .at { color: #7d9029; } /* Attribute */
+.sourceCode .do { color: #ba2121; font-style: italic; } /* Documentation */
+.sourceCode .an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+.sourceCode .cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+.sourceCode .in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */

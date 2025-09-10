@@ -1,0 +1,170 @@
+% Template LaTeX personnalisé pour la documentation POC Prompt2Prod
+\documentclass[11pt,a4paper]{article}
+
+% Packages essentiels
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+% Configuration de la page
+\geometry{
+  top=2.5cm,
+  bottom=2.5cm,
+  left=2.5cm,
+  right=2.5cm,
+  headheight=1.5cm,
+  headsep=1cm,
+  footskip=1cm
+}
+
+% Couleurs personnalisées
+\definecolor{primaryblue}{RGB}{0,82,155}
+\definecolor{secondaryblue}{RGB}{51,122,183}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{darkgray}{RGB}{85,85,85}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codepurple}{RGB}{128,0,128}
+\definecolor{codered}{RGB}{255,0,0}
+
+% Configuration des liens
+\hypersetup{
+  colorlinks=true,
+  linkcolor=primaryblue,
+  urlcolor=secondaryblue,
+  citecolor=primaryblue,
+  filecolor=primaryblue
+}
+
+% Polices - simplifiées pour compatibilité
+% \usepackage{fontspec}
+% \setmainfont{Liberation Serif}
+% \setsansfont{Liberation Sans}
+% \setmonofont{Liberation Mono}
+
+% En-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\includegraphics[height=1cm]{logo-placeholder.png}}
+\fancyfoot[L]{POC Prompt2Prod - Documentation}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{\today}
+
+% Style des titres
+\titleformat{\section}[block]
+{\Large\bfseries\sffamily\color{primaryblue}}
+{}{0pt}{}
+[\titlerule[0.8pt]]
+
+\titleformat{\subsection}[block]
+{\large\bfseries\sffamily\color{secondaryblue}}
+{}{0pt}{}
+
+\titleformat{\subsubsection}[block]
+{\normalsize\bfseries\sffamily}
+{}{0pt}{}
+
+% Configuration des listings (code)
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  framerule=0pt,
+  rulecolor=\color{darkgray},
+  numbers=left,
+  numberstyle=\tiny\color{darkgray},
+  keywordstyle=\color{primaryblue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{codered},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  columns=flexible,
+  keepspaces=true
+}
+
+% Boîtes colorées pour les notes
+\newtcolorbox{infobox}[1][]{
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  title=#1
+}
+
+\newtcolorbox{warningbox}[1][]{
+  colback=orange!5!white,
+  colframe=orange!75!black,
+  title=#1
+}
+
+\newtcolorbox{successbox}[1][]{
+  colback=green!5!white,
+  colframe=green!75!black,
+  title=#1
+}
+
+% Variables du document
+\providecommand{\thetitle}{Documentation POC Prompt2Prod}
+\providecommand{\theauthor}{Équipe DevOps}
+\providecommand{\thedate}{\today}
+
+% Page de titre personnalisée
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries\sffamily\color{primaryblue}\@title\par}
+    \vspace{1.5cm}
+    
+    {\Large\sffamily Guide technique et fonctionnel\par}
+    \vspace{2cm}
+    
+    \includegraphics[width=0.5\textwidth]{logo-placeholder.png}
+    \vspace{2cm}
+    
+    {\Large\sffamily\@author\par}
+    \vspace{0.5cm}
+    {\large\@date\par}
+    
+    \vfill
+    
+    {\large\sffamily
+    Transformation d'idées en code de production\\
+    Pipeline DevOps moderne avec IA
+    \par}
+    
+    \vspace{1cm}
+    
+  \end{titlepage}
+}
+\makeatother
+
+\begin{document}
+
+$body$
+
+\end{document}
