@@ -8,7 +8,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/poc-openhands
 
 jobs:
   build-test-deploy:
@@ -21,6 +20,13 @@ jobs:
     # Checkout du code
     - name: Checkout repository
       uses: actions/checkout@v4
+    
+    # Set lowercase owner name
+    - name: set lower case owner name
+      run: |
+        echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+      env:
+        OWNER: '${{ github.repository_owner }}'
     
     # Setup Docker Buildx
     - name: Set up Docker Buildx
@@ -42,8 +48,8 @@ jobs:
         file: ./docker/Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/poc-openhands:latest
+          ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/poc-openhands:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
@@ -63,7 +69,7 @@ jobs:
         echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
         
         # Update image tag in deployment
-        export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+        export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/poc-openhands:${{ github.sha }}"
         envsubst < k8s/base/app-deployment.yaml | kubectl apply -f -
         
         # Apply other manifests
