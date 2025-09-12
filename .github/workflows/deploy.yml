@@ -80,66 +80,30 @@ jobs:
           echo "3. Check rollout status:"
           echo "   kubectl rollout status deployment/app -n prompt2prod"
 
-      # COMMENTED OUT: Deploy to K3s (for self-hosted runner later)
-      # Uncomment this section when using self-hosted runner with local K3s access
+  # COMMENTED OUT: Uncomment this job for self-hosted runner deployment
+  deploy:
+    needs: build-test
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Deploy to K3s
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          # Setup kubectl
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
-
-          # Install Helm if not present
-          if ! command -v helm &> /dev/null; then
-            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-          fi
-
-          # Test kubectl connection first
+          # Test kubectl connection (should work on self-hosted runner)
           echo "🔍 Testing cluster connectivity..."
-          kubectl cluster-info --request-timeout=30s || {
-            echo "❌ Cannot connect to Kubernetes cluster"
-            echo "Cluster info:"
-            kubectl config current-context || echo "No context available"
-            exit 1
-          }
-
-          # Install Gateway API CRDs if not present
-          if ! kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null; then
-            echo "📋 Installing Gateway API CRDs..."
-            kubectl apply --validate=false -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
-            kubectl wait --for=condition=Established crd/gateways.gateway.networking.k8s.io --timeout=60s
-          fi
-
-          # Install/upgrade KGateway with AI extension
-          echo "🚀 Installing KGateway with AI support..."
-          helm upgrade -i --create-namespace --namespace kgateway-system \
-            --version v2.0.4 \
-            --set gateway.aiExtension.enabled=true \
-            kgateway-crds \
-            oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds
-            
-          helm upgrade -i --namespace kgateway-system \
-            --version v2.0.4 \
-            --set gateway.aiExtension.enabled=true \
-            kgateway \
-            oci://cr.kgateway.dev/kgateway-dev/charts/kgateway
-            
-          # Wait for KGateway to be ready
-          kubectl wait --for=condition=ready pod \
-            -l app.kubernetes.io/name=kgateway \
-            -n kgateway-system \
-            --timeout=120s || true
+          kubectl cluster-info
 
           # Update image tag in deployment
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
-          # Apply all other manifests
-          kubectl apply -R -f k8s/base/ --ignore-not-found=true
+          # Apply all manifests
+          kubectl apply -R -f k8s/base/
 
           # Wait for rollout
-          kubectl rollout status deployment/app -n prompt2prod --timeout=5m || true
+          kubectl rollout status deployment/app -n prompt2prod --timeout=5m
 
           # Show status
-          kubectl get pods -n prompt2prod
-          kubectl get pods -n kgateway-system
+          kubectl get pods -n prompt2prod -o wide
