@@ -110,6 +110,7 @@ jobs:
 
   # Codespace deployment with K3s container (lightweight Alpine)
   deploy-codespace:
+    needs: build-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
