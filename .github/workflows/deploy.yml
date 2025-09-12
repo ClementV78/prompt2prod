@@ -140,7 +140,11 @@ jobs:
           echo "⚙️ Installing KGateway..."
           ./scripts/setup-kgateway.sh
           kubectl wait --for=condition=available --timeout=300s deployment/kgateway -n kgateway-system
-
+      - name: Create OpenAI Secret
+        run: |
+          kubectl create secret generic openai-secret-app \
+            --from-literal=Authorization=${{ secrets.OPENAI_API_KEY }} \
+            -n prompt2prod --dry-run=client -o yaml | kubectl apply -f -
       - name: Deploy Application
         run: |
           echo "📦 Deploying application..."
@@ -160,6 +164,7 @@ jobs:
           SECONDS=0
           TIMEOUT=600
           while [ $SECONDS -lt $TIMEOUT ]; do
+            sleep 10
             echo "⏳ $(date +%T) - État des pods dans prompt2prod:"
             kubectl get pods -n prompt2prod -o wide
             echo "--------------------------------------"
