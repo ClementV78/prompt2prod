@@ -25,7 +25,7 @@ This **Prompt2Prod** POC demonstrates a complete DevOps automation pipeline wher
 ## Common Commands
 
 ### Core DevOps Operations
-- **Full POC deployment**: `./init-project.sh && ./scripts/setup-k3s.sh && ./scripts/deploy.sh`
+- **Full POC deployment**: `./scripts/setup-k3s.sh && ./scripts/setup-kgateway.sh && kubectl apply -R -f k8s/base/`
 - **Test API generation**: 
   ```bash
   curl -X POST http://192.168.31.106:31104/generate \
@@ -43,8 +43,7 @@ This **Prompt2Prod** POC demonstrates a complete DevOps automation pipeline wher
 
 ### Kubernetes Operations
 - **K3s cluster**: `./scripts/setup-k3s.sh` (lightweight K8s for demos)
-- **Deploy stack**: `./scripts/deploy.sh` (Ollama + KGateway + App)
-- **Apply configs**: `kubectl apply -f k8s/base/ollama/ -f k8s/base/openai/ -f k8s/base/app/`
+- **Deploy all services**: `kubectl apply -R -f k8s/base/` (Ollama + KGateway routes + App)
 - **Monitor**: `kubectl get pods -w` and `kubectl logs -f deployment/ollama`
 - **Restart app**: `kubectl rollout restart deployment/app -n prompt2prod`
 

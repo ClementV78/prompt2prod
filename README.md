@@ -19,16 +19,16 @@
 git clone https://github.com/ClementV78/prompt2prod.git
 cd prompt2prod
 
-# 2. Setup infrastructure
+# 2. Setup infrastructure (one-time)
 ./scripts/setup-k3s.sh          # Setup cluster Kubernetes
 ./scripts/setup-kgateway.sh     # Setup Gateway API
-./scripts/deploy.sh             # Déployer les services
+./scripts/setup-ollama-models.sh # Charger les modèles IA
 
-# 3. Charger les modèles IA
-./scripts/setup-ollama-models.sh
+# 3. Déployer l'application
+kubectl apply -R -f k8s/base/
 
 # 4. Tester l'API
-curl -X POST "http://localhost:8080/generate" \
+curl -X POST "http://192.168.31.106:31104/generate" \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Create a Python hello world script", "model": "llama3.2:1b", "mode": "local"}'
 ```
@@ -124,15 +124,15 @@ kubectl exec deployment/ollama -- ollama list
 ## 🔧 Développement
 
 ```bash
-# Déploiement local
-kubectl apply -f k8s/base/
+# Déploiement
+kubectl apply -R -f k8s/base/
 
 # Rebuild et redéploiement
 docker build -t ghcr.io/clementv78/prompt2prod:latest -f docker/Dockerfile .
-kubectl rollout restart deployment/app
+kubectl rollout restart deployment/app -n prompt2prod
 
 # Accès aux logs
-kubectl logs -f deployment/app
+kubectl logs -f deployment/app -n prompt2prod
 ```
 
 ## ⚡ Exemple d'utilisation

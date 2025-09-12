@@ -72,11 +72,8 @@ jobs:
         export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
         envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
         
-        # Apply all manifests
-        kubectl apply -f k8s/base/app/
-        kubectl apply -f k8s/base/ollama/
-        kubectl apply -f k8s/base/openai/
-        kubectl apply -f k8s/base/gateway.yaml
+        # Apply all other manifests
+        kubectl apply -R -f k8s/base/ --ignore-not-found=true
         
         # Wait for rollout
         kubectl rollout status deployment/app -n prompt2prod --timeout=5m || true
