@@ -123,16 +123,34 @@ kubectl exec deployment/ollama -- ollama list
 
 ## 🔧 Développement
 
+### Déploiement manuel (après GitHub Actions build)
+
 ```bash
-# Déploiement
+# 1. Récupérer l'image buildée par GitHub Actions
+export IMAGE_TAG="ghcr.io/clementv78/prompt2prod:$(git rev-parse HEAD)"
+docker pull $IMAGE_TAG
+
+# 2. Déployer avec la nouvelle image
+envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 kubectl apply -R -f k8s/base/
 
-# Rebuild et redéploiement
-docker build -t ghcr.io/clementv78/prompt2prod:latest -f docker/Dockerfile .
-kubectl rollout restart deployment/app -n prompt2prod
+# 3. Vérifier le rollout
+kubectl rollout status deployment/app -n prompt2prod
 
-# Accès aux logs
+# 4. Accès aux logs
 kubectl logs -f deployment/app -n prompt2prod
+```
+
+### Déploiement automatique (self-hosted runner)
+
+Pour un déploiement automatique, voir la [documentation du self-hosted runner](docs/SELF_HOSTED_RUNNER.md).
+
+### Build local (développement)
+
+```bash
+# Build et test local
+docker build -t prompt2prod:dev -f docker/Dockerfile .
+docker run --rm -p 8000:8000 prompt2prod:dev
 ```
 
 ## ⚡ Exemple d'utilisation
