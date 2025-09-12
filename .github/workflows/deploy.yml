@@ -68,6 +68,38 @@ jobs:
         mkdir -p $HOME/.kube
         echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
         
+        # Install Helm if not present
+        if ! command -v helm &> /dev/null; then
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        fi
+        
+        # Install Gateway API CRDs if not present
+        if ! kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null; then
+          echo "📋 Installing Gateway API CRDs..."
+          kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
+          kubectl wait --for=condition=Established crd/gateways.gateway.networking.k8s.io --timeout=60s
+        fi
+        
+        # Install/upgrade KGateway with AI extension
+        echo "🚀 Installing KGateway with AI support..."
+        helm upgrade -i --create-namespace --namespace kgateway-system \
+          --version v2.0.4 \
+          --set gateway.aiExtension.enabled=true \
+          kgateway-crds \
+          oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds
+          
+        helm upgrade -i --namespace kgateway-system \
+          --version v2.0.4 \
+          --set gateway.aiExtension.enabled=true \
+          kgateway \
+          oci://cr.kgateway.dev/kgateway-dev/charts/kgateway
+          
+        # Wait for KGateway to be ready
+        kubectl wait --for=condition=ready pod \
+          -l app.kubernetes.io/name=kgateway \
+          -n kgateway-system \
+          --timeout=120s || true
+        
         # Update image tag in deployment
         export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
         envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -

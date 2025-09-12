@@ -55,14 +55,16 @@ install_kgateway() {
     helm upgrade -i --create-namespace \
         --namespace kgateway-system \
         --version v2.0.4 \
+        --set gateway.aiExtension.enabled=true \
         kgateway-crds \
         oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds
     
-    # Installer KGateway Controller
-    echo "  📦 Installation du controller KGateway..."
+    # Installer KGateway Controller avec extension AI
+    echo "  📦 Installation du controller KGateway avec support AI..."
     helm upgrade -i \
         --namespace kgateway-system \
         --version v2.0.4 \
+        --set gateway.aiExtension.enabled=true \
         kgateway \
         oci://cr.kgateway.dev/kgateway-dev/charts/kgateway
     
@@ -111,8 +113,8 @@ main() {
     echo "✅ KGateway installé avec succès!"
     echo ""
     echo "📋 Prochaines étapes:"
-    echo "  1. Déployer vos services: ./scripts/deploy.sh"
-    echo "  2. Vérifier les routes: kubectl get gateway,httproute -A"
+    echo "  1. Déployer vos services: kubectl apply -R -f k8s/base/"
+    echo "  2. Vérifier les routes: kubectl get gateway,httproute,backend -A"
     echo ""
 }
 
