@@ -18,6 +18,18 @@ htmlcov/
 dist/
 build/
 
+# Test reports (temporary files)
+test-results.xml
+coverage.xml
+bandit-report.json
+bandit-report.txt
+safety-report.json
+safety-report.txt
+trivy-*.json
+trivy-*.txt
+security-reports/
+reports-index.html
+
 # Node
 node_modules/
 npm-debug.log*

@@ -1,0 +1,25 @@
+# Configuration Bandit pour l'analyse de sécurité Python
+[bandit]
+
+# Exclusions de fichiers
+exclude_dirs = [
+    "tests",
+    "venv",
+    ".venv",
+    "node_modules",
+    ".git"
+]
+
+# Tests à ignorer (si nécessaire)
+skips = [
+    # B101: Test for use of assert
+    # Nous utilisons assert dans nos tests, c'est OK
+    "B101"
+]
+
+# Niveau de sévérité minimum
+severity = "medium"
+
+# Format de sortie
+format = "json"
+output = "bandit-report.json"

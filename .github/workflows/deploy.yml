@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build, Test and Deploy
 
 on:
   push:
@@ -10,7 +10,58 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-test:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Run unit tests
+        run: |
+          echo "🧪 Running unit tests..."
+          pytest tests/unit/ -v --cov=src --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml
+
+      - name: Run security tests
+        run: |
+          echo "🔒 Running security tests..."
+          pytest tests/security/ -v -m security
+
+      - name: Security scan with Bandit
+        run: |
+          echo "🐍 Running Bandit security scan..."
+          bandit -r src/ -f json -o bandit-report.json -ll || true
+          bandit -r src/ -ll
+
+      - name: Dependency vulnerability scan
+        run: |
+          echo "🔍 Running dependency vulnerability scan..."
+          safety check --json --output safety-report.json || true
+          safety check
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: |
+            test-results.xml
+            coverage.xml
+            bandit-report.json
+            safety-report.json
+
+  build:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,15 +104,27 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Run tests
-      - name: Run tests
+      # Verify Docker image
+      - name: Test Docker image
         run: |
-          echo "🧪 Running tests..."
-          echo "✅ Build completed successfully"
-          echo "📦 Docker image pushed to GHCR"
-          echo "🎯 Ready for manual deployment with: kubectl apply -R -f k8s/base/"
-          # Add your test commands here when ready:
-          # docker run --rm ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }} pytest
+          echo "🐳 Testing Docker image..."
+          # Test que l'image démarre correctement
+          docker run --rm -d --name test-container \
+            -p 8080:8000 \
+            -e KGATEWAY_ENDPOINT="http://test:80" \
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}
+          
+          # Attendre que le container démarre
+          sleep 10
+          
+          # Test du health check
+          curl -f http://localhost:8080/health || (docker logs test-container && exit 1)
+          curl -f http://localhost:8080/ || (docker logs test-container && exit 1)
+          
+          # Nettoyer
+          docker stop test-container
+          
+          echo "✅ Docker image test passed"
 
       # Summary
       - name: Deployment Instructions
@@ -82,7 +145,7 @@ jobs:
 
   # Self-hosted runner deployment
   deploy-self-hosted:
-    needs: build-test
+    needs: [test, build]
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -110,7 +173,7 @@ jobs:
 
   # Codespace deployment with K3s container (lightweight Alpine)
   deploy-codespace:
-    needs: build-test
+    needs: [test, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -156,7 +219,10 @@ jobs:
 
           kubectl apply -R -f k8s/base/
 
-          # Boucle de surveillance
+      - name: Wait for deployment
+        run: |
+
+          # Surveillance du déploiement
           SECONDS=0
           TIMEOUT=600
           while [ $SECONDS -lt $TIMEOUT ]; do
@@ -166,11 +232,11 @@ jobs:
 
             # Vérifie si un pod est en erreur
             if kubectl get pods -n prompt2prod | grep -E 'Error|CrashLoopBackOff|ImagePullBackOff'; then
-              echo "❌ Un pod est en erreur, debug..."
+              echo "❌ Pod en erreur détecté, debug..."
               kubectl describe pods -n prompt2prod || true
               kubectl get events -n prompt2prod --sort-by=.lastTimestamp | tail -20 || true
               for pod in $(kubectl get pods -n prompt2prod --no-headers | grep -E 'Error|CrashLoopBackOff|ImagePullBackOff' | awk '{print $1}'); do
-                echo "🔍 Logs du pod $pod"
+                echo "🔍 Logs du pod $pod:"
                 kubectl logs -n prompt2prod $pod || true
               done
               exit 1
@@ -178,23 +244,67 @@ jobs:
 
             # Vérifie si le déploiement est prêt
             if kubectl rollout status deployment/app -n prompt2prod --timeout=5s >/dev/null 2>&1; then
-              echo "✅ Déploiement réussi"
-              exit 0
+              echo "✅ Déploiement terminé avec succès"
+              break
             fi
 
             sleep 10
           done
 
-          echo "⏰ Timeout de $TIMEOUT secondes atteint sans succès du déploiement"
-          kubectl describe deployment app -n prompt2prod || true
-          kubectl describe pods -n prompt2prod || true
-          exit 1
+          if [ $SECONDS -ge $TIMEOUT ]; then
+            echo "⏰ Timeout de $TIMEOUT secondes atteint"
+            kubectl describe deployment app -n prompt2prod || true
+            kubectl describe pods -n prompt2prod || true
+            exit 1
+          fi
+
+      - name: Run Integration Tests
+        run: |
+          echo "🧪 Running integration tests..."
+          
+          # Attendre que l'API soit accessible
+          echo "⏳ Waiting for API to be ready..."
+          RETRY_COUNT=0
+          MAX_RETRIES=30
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}' > /dev/null 2>&1; then
+              NODE_PORT=$(kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}')
+              if curl -f http://localhost:$NODE_PORT/health > /dev/null 2>&1; then
+                echo "✅ API is ready on port $NODE_PORT"
+                break
+              fi
+            fi
+            echo "🔄 Retry $((RETRY_COUNT + 1))/$MAX_RETRIES..."
+            sleep 10
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+          done
+          
+          if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+            echo "❌ API not accessible after $MAX_RETRIES retries"
+            kubectl get pods -n prompt2prod
+            kubectl logs -n prompt2prod deployment/app --tail=50
+            exit 1
+          fi
+          
+          # Installer pytest pour les tests d'intégration
+          python -m pip install --upgrade pip
+          pip install pytest pytest-asyncio httpx
+          
+          # Exécuter les tests d'intégration
+          export API_URL="http://localhost:$NODE_PORT"
+          pytest tests/integration/ -v -m integration --tb=short
+          
+          echo "✅ Integration tests completed!"
 
       - name: Show Deployment Status
         run: |
-          echo "✅ Deployment completed!"
+          echo "✅ Deployment and tests completed!"
           kubectl get pods -n prompt2prod -o wide
           kubectl get services -n prompt2prod
+          
+          NODE_PORT=$(kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}')
+          echo "🌐 API accessible at: http://localhost:$NODE_PORT"
+          echo "📚 Swagger UI: http://localhost:$NODE_PORT/docs"
 
       - name: Cleanup cluster
         if: always()
