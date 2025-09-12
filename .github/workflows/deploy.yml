@@ -149,12 +149,6 @@ jobs:
         run: |
           echo "📦 Deploying application..."
           kubectl create namespace prompt2prod --dry-run=client -o yaml | kubectl apply -f -
-
-          # Secret OpenAI (optionnel si besoin)
-          kubectl create secret generic openai-secret \
-            --from-literal=Authorization=${{ secrets.OPENAI_API_KEY }} \
-            -n prompt2prod --dry-run=client -o yaml | kubectl apply -f -
-
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
