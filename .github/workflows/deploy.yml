@@ -110,34 +110,29 @@ jobs:
 
   # Codespace deployment with K3s container (lightweight Alpine)
   deploy-codespace:
-    needs: build-test
     runs-on: ubuntu-latest
-    container:
-      image: node:20-alpine
-      options: --privileged
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: Install Git and Curl
-        run: |
-          echo "📦 Installing dependencies..."
-          apk add --no-cache git curl bash
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Start K3s
+      - name: Install k3d
         run: |
-          echo "🚀 Starting K3s server..."
-          curl -sfL https://get.k3s.io | sh -s - --disable traefik
-          sleep 20
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
-          # Setup kubectl config
-          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
+      - name: Start K3d cluster
+        run: |
+          echo "🚀 Starting k3d cluster..."
+          k3d cluster create ci \
+            --servers 1 \
+            --agents 1 \
+            --wait
 
-          # Wait for node ready
-          kubectl wait --for=condition=Ready nodes --all --timeout=300s
+          # Export kubeconfig for later steps
+          export KUBECONFIG=$(k3d kubeconfig write ci)
+          echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_ENV
+
           kubectl cluster-info
+          kubectl get nodes -o wide
 
       - name: Setup KGateway
         run: |
@@ -147,7 +142,7 @@ jobs:
 
       - name: Deploy Application
         run: |
-          echo "📦 Deploying to Codespace K3s..."
+          echo "📦 Deploying application..."
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
@@ -156,6 +151,12 @@ jobs:
 
       - name: Show Deployment Status
         run: |
-          echo "✅ Codespace deployment completed!"
+          echo "✅ Deployment completed!"
           kubectl get pods -n prompt2prod -o wide
           kubectl get services -n prompt2prod
+
+      - name: Cleanup cluster
+        if: always()
+        run: |
+          echo "🧹 Cleaning up k3d cluster..."
+          k3d cluster delete ci
