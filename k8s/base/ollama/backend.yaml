@@ -1,0 +1,20 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  labels:
+    app: ai-gateway
+  name: ollama
+  namespace: kgateway-system
+spec:
+  type: AI
+  ai:
+    llm:
+      hostOverride:
+        host: ollama.prompt2prod.svc.cluster.local
+        port: 11434
+      provider:
+        openai:
+          model: "llama3.2:1b"
+          authToken:
+            kind: Inline
+            inline: "dummy-token"

@@ -26,26 +26,27 @@ This **Prompt2Prod** POC demonstrates a complete DevOps automation pipeline wher
 
 ### Core DevOps Operations
 - **Full POC deployment**: `./init-project.sh && ./scripts/setup-k3s.sh && ./scripts/deploy.sh`
-- **Test prompt-to-repo generation**: 
+- **Test API generation**: 
   ```bash
-  curl -X POST http://localhost:8080/generate-project \
+  curl -X POST http://192.168.31.106:31104/generate \
     -H "Content-Type: application/json" \
-    -d '{"prompt": "Create a Python FastAPI todo app with PostgreSQL"}'
+    -d '{"prompt": "Create a Python function", "mode": "local", "model": "llama3.2:1b"}'
   ```
-- **KGateway routing**: `./scripts/setup-kgateway.sh` (CNCF Gateway API)
-- **Multi-LLM selection**: Headers `x-llm-mode: local` (Ollama) vs `x-llm-mode: cloud` (OpenRouter)
+- **List available models**: `curl http://192.168.31.106:31104/models`
+- **KGateway unified routing**: All requests go through KGateway (OpenAI + Ollama)
 
 ### Development Commands
 - **Python tests**: `pytest tests/unit/` or `./scripts/test.sh` (full integration testing)
 - **Local API**: `python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000`
 - **Requirements**: `pip install -r requirements.txt` and `pip install -r requirements-test.txt`
+- **Build & Deploy**: `docker build -f docker/Dockerfile -t ghcr.io/clementv78/prompt2prod:latest . && docker push ghcr.io/clementv78/prompt2prod:latest`
 
 ### Kubernetes Operations
 - **K3s cluster**: `./scripts/setup-k3s.sh` (lightweight K8s for demos)
 - **Deploy stack**: `./scripts/deploy.sh` (Ollama + KGateway + App)
-- **Load AI models**: `./scripts/setup-ollama-models.sh`
+- **Apply configs**: `kubectl apply -f k8s/base/ollama/ -f k8s/base/openai/ -f k8s/base/app/`
 - **Monitor**: `kubectl get pods -w` and `kubectl logs -f deployment/ollama`
-- **GitOps**: `kubectl apply -k k8s/base` (Kustomize-based deployments)
+- **Restart app**: `kubectl rollout restart deployment/app -n prompt2prod`
 
 ## Architecture Overview - DevOps Patterns Demonstration
 
@@ -60,15 +61,15 @@ This **Prompt2Prod POC** showcases modern DevOps practices through AI-driven pro
 
 **2. KGateway (CNCF Gateway API)**:
 - Implementation of CNCF Gateway API standard (not Ingress)
-- Intelligent request routing based on headers (`x-llm-mode`)
-- Load balancing between local (Ollama) and cloud (OpenRouter) services
-- Demonstrates modern API gateway patterns vs traditional reverse proxies
+- Standard path-based routing: `/ollama` → Ollama, `/openai` → OpenAI
+- AI Backend configuration with OpenAI-compatible API format
+- Production-ready timeouts and error handling
 
 **3. Multi-LLM Architecture**:
 - **Ollama** (local): Resource-efficient local inference (llama3.2:1b, phi3:mini, mistral:7b-instruct)
-- **OpenRouter** (cloud): High-capability models for complex reasoning
-- Dynamic model selection based on task complexity and requirements
-- Fallback strategies and cost optimization patterns
+- **OpenAI** (cloud): High-capability models (gpt-4o-mini, gpt-3.5-turbo)
+- **Unified routing**: All LLM requests go through KGateway for consistency
+- **Smart timeouts**: 40s KGateway → Backend, 180s App → KGateway
 
 **4. GitHub Actions & GitOps**:
 - Multi-stage CI/CD pipeline with parallel job execution
@@ -86,12 +87,11 @@ This **Prompt2Prod POC** showcases modern DevOps practices through AI-driven pro
 
 ### Prompt-to-Production Flow
 1. **User prompt** → "Create a React app with TypeScript and testing"
-2. **KGateway routing** → Route to optimal LLM (`x-llm-mode` header)
-3. **OpenHands orchestration** → Multi-step project generation workflow:
-   - Code generation (Ollama for implementation)
-   - Architecture decisions (OpenRouter for complex planning)
-   - Documentation generation
-   - Test creation
+2. **KGateway routing** → Route to optimal LLM (path-based: `/ollama` or `/openai`)
+3. **LLM Processing** → Generate code based on prompt:
+   - Local models (Ollama): Fast, private, cost-effective
+   - Cloud models (OpenAI): High-capability, latest features
+   - Unified OpenAI-compatible API format
 4. **GitHub integration** → Automatic repository creation with:
    - Complete source code
    - GitHub Actions workflow (CI/CD)
@@ -100,36 +100,52 @@ This **Prompt2Prod POC** showcases modern DevOps practices through AI-driven pro
    - Basic test suite
 5. **Auto-deployment** → Triggered GitHub Actions pipeline deploys to K8s
 
+### Current Architecture (Post-Refactoring)
+
+**Unified KGateway Architecture:**
+```
+Client → App (FastAPI) → KGateway → {Ollama | OpenAI}
+```
+
+**API Endpoints:**
+- `POST /generate` - Generate content with any available model
+- `GET /models` - List all models (local + cloud) with real-time status
+- `GET /health` - Health check endpoint
+
+**Model Selection:**
+- `mode: "local"` → Routes to Ollama via KGateway `/ollama`
+- `mode: "cloud"` → Routes to OpenAI via KGateway `/openai`
+
 ### Key Implementation Directories
-- `k8s/base/`: Complete K8s stack with Gateway API resources
-- `.github/workflows/deploy.yml`: Multi-stage CI/CD with parallel execution
-- `scripts/`: Infrastructure automation (K3s, KGateway, Ollama setup)
-- `docker/`: Multi-stage builds with optimization patterns
-- `src/api/main.py`: FastAPI with dual LLM integration logic
+- `k8s/base/app/`: FastAPI application deployment
+- `k8s/base/ollama/`: Ollama backend + HTTPRoute (AI Backend)
+- `k8s/base/openai/`: OpenAI backend + HTTPRoute (AI Backend)
+- `src/api/main.py`: FastAPI with unified KGateway routing
+- `docker/Dockerfile`: Multi-stage Python build
 
 ## DevOps Interview Demo Script
 
-**"Show me how you'd implement a complete automation pipeline"**
+**"Show me how you'd implement a complete LLM integration platform"**
 
 1. **Demo the core use case**:
    ```bash
-   # Submit a project idea
-   curl -X POST http://localhost:8080/generate-project \
-     -d '{"prompt": "Node.js Express API with MongoDB and Jest tests"}'
+   # Test local model
+   curl -X POST http://192.168.31.106:31104/generate \
+     -d '{"prompt": "Create a Python function", "mode": "local", "model": "llama3.2:1b"}'
    
-   # Show the generated GitHub repo with:
-   # - Complete source code
-   # - GitHub Actions CI/CD pipeline  
-   # - Dockerfile + K8s manifests
-   # - README and API documentation
-   # - Jest test suite with coverage
+   # Test cloud model
+   curl -X POST http://192.168.31.106:31104/generate \
+     -d '{"prompt": "Explain microservices", "mode": "cloud", "model": "gpt-4o-mini"}'
+     
+   # List available models
+   curl http://192.168.31.106:31104/models
    ```
 
 2. **Highlight modern DevOps tools**:
-   - **OpenHands**: "Complex workflow orchestration beyond simple scripts"
-   - **KGateway (CNCF)**: "Modern Gateway API, not legacy Ingress controllers"  
-   - **Multi-LLM**: "Cost optimization with local/cloud model selection"
-   - **GitHub Actions**: "Modern CI/CD with parallel jobs and optimized caching"
+   - **KGateway (CNCF)**: "Modern Gateway API with AI Backend support"  
+   - **Multi-LLM**: "Unified API for local (Ollama) and cloud (OpenAI) models"
+   - **Docker + K8s**: "Production-ready containerized deployment"
+   - **Real-time model discovery**: "Dynamic model listing from live services"
 
 3. **Technical depth discussion**:
    - **Infrastructure-as-Code**: K3s automation, Kustomize configurations
@@ -137,4 +153,4 @@ This **Prompt2Prod POC** showcases modern DevOps practices through AI-driven pro
    - **Production readiness**: Health checks, resource limits, monitoring
    - **Security**: Secret management, RBAC, container scanning
 
-**Key talking points**: This isn't just "AI generates code" - it's a **complete DevOps automation platform** that demonstrates modern infrastructure patterns, CI/CD best practices, and production-ready deployment strategies.
+**Key talking points**: This demonstrates a **production-ready LLM integration platform** with modern DevOps practices: Gateway API routing, containerized deployments, unified APIs, and real-time model management across local and cloud providers.

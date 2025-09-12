@@ -1,0 +1,15 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: openai-backend
+  namespace: prompt2prod
+spec:
+  type: AI
+  ai:
+    llm:
+      provider:
+        openai:
+          authToken:
+            kind: SecretRef
+            secretRef:
+              name: openai-secret

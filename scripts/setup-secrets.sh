@@ -3,15 +3,12 @@ set -e
 
 echo "🔐 Setting up secrets..."
 
-# Check if required environment variables are set
-if [ -z "$OPENROUTER_API_KEY" ]; then
-    echo "❌ OPENROUTER_API_KEY is not set"
-    exit 1
-fi
+# Use environment variables or defaults for testing
+OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-"test-key-change-me"}
+GITHUB_TOKEN=${GITHUB_TOKEN:-"test-token-change-me"}
 
-if [ -z "$GITHUB_TOKEN" ]; then
-    echo "❌ GITHUB_TOKEN is not set"
-    exit 1
+if [ "$OPENROUTER_API_KEY" = "test-key-change-me" ]; then
+    echo "⚠️  Warning: Using default OPENROUTER_API_KEY - cloud mode will not work"
 fi
 
 # Create base64 encoded secrets
@@ -24,7 +21,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: llm-secrets
-  namespace: poc-openhands
+  namespace: prompt2prod
 type: Opaque
 data:
   openrouter_api_key: $OPENROUTER_API_KEY_BASE64

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-NAMESPACE="poc-openhands"
+NAMESPACE="prompt2prod"
 
 echo "🚀 Deploying to K3s in namespace: $NAMESPACE"
 
@@ -12,9 +12,17 @@ if ! kubectl cluster-info &> /dev/null; then
     exit 1
 fi
 
-# Deploy all components
+# Create namespace if it doesn't exist
+echo "📁 Creating namespace $NAMESPACE if needed..."
+kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+# Setup secrets from environment variables
+echo "🔐 Setting up secrets..."
+./scripts/setup-secrets-env.sh
+
+# Deploy all components (excluding secrets.yaml since it's handled by setup-secrets-env.sh)
 echo "🤖 Deploying components..."
-kubectl apply -f k8s/base/
+find k8s/base -name "*.yaml" ! -name "secrets.yaml" -exec kubectl apply -f {} \;
 
 # Wait for pods to be ready
 echo "⏳ Waiting for pods to start..."

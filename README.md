@@ -64,7 +64,7 @@ prompt2prod/
 ### Stack technologique
 
 - **API**: FastAPI avec validation Pydantic
-- **IA**: Ollama local (Llama3.2:1b, phi3:mini, mistral:7b-instruct) + Cloud (OpenRouter)
+- **IA**: Ollama local (Llama3.2:1b, phi3:mini, mistral:7b-instruct) + Cloud (OpenAI)
 - **Orchestration**: Kubernetes avec K3s
 - **Routage**: KGateway (CNCF Gateway API)
 - **CI/CD**: GitHub Actions + GHCR
@@ -73,9 +73,9 @@ prompt2prod/
 ### Architecture
 
 ```
-User → FastAPI → KGateway → [Local: Ollama | Cloud: OpenRouter] → Generated Code
-                    ↓ (x-llm-mode header routing)
-           [llama3.2:1b, phi3:mini, mistral:7b] | [GPT, Claude, etc.]
+User → FastAPI → KGateway → [Local: Ollama | Cloud: OpenAI] → Generated Code
+                    ↓ (unified routing)
+           [llama3.2:1b, phi3:mini, mistral:7b] | [gpt-4o-mini, gpt-3.5-turbo]
 ```
 
 ### Composants déployés
@@ -116,10 +116,10 @@ kubectl exec deployment/ollama -- ollama list
 
 ## 📝 Documentation
 
-- **[🏗️ Architecture](docs/html/architecture.html)** - Guide DevOps complet
-- **[🔌 API Reference](docs/html/api-reference.html)** - Documentation des endpoints
-- **[👤 Guide Utilisateur](docs/html/user-guide.html)** - Guide fonctionnel
-- **[📖 Documentation complète](docs/html/index.html)** - Interface d'accueil
+- **[🏗️ Architecture](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/architecture.html)** - Guide DevOps complet
+- **[🔌 API Reference](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/api-reference.html)** - Documentation des endpoints
+- **[👤 Guide Utilisateur](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/user-guide.html)** - Guide fonctionnel
+- **[📖 Documentation complète](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/index.html)** - Interface d'accueil
 
 ## 🔧 Développement
 
@@ -147,12 +147,12 @@ curl -X POST "http://localhost:8080/generate" \
     "mode": "local"
   }'
 
-# Génération avec modèle cloud (OpenRouter)
+# Génération avec modèle cloud (OpenAI)
 curl -X POST "http://localhost:8080/generate" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "Create a complex microservice architecture",
-    "model": "gpt-4", 
+    "model": "gpt-4o-mini", 
     "mode": "cloud"
   }'
 

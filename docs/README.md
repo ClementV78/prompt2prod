@@ -6,15 +6,16 @@ Cette documentation complète présente **Prompt2Prod**, un système DevOps mode
 
 ### Documents sources (Markdown)
 - [`architecture/architecture.md`](architecture/architecture.md) - Architecture technique et DevOps
-- [`api/api-reference.md`](api/api-reference.md) - Référence complète des APIs
+- [`api/api-reference-v2.md`](api/api-reference-v2.md) - **Référence API v2 (KGateway unifié)**
+- [`api/api-reference.md`](api/api-reference.md) - Référence API v1 (dépréciée)
 - [`functional/user-guide.md`](functional/user-guide.md) - Guide utilisateur fonctionnel
 
 ### Documentation HTML générée
-- **[📖 Page d'accueil](html/index.html)** - Interface d'accueil avec navigation
-- **[🏗️ Architecture](html/architecture.html)** - Documentation technique DevOps
-- **[🔌 API Reference](html/api-reference.html)** - Référence des endpoints
-- **[👤 Guide Utilisateur](html/user-guide.html)** - Guide fonctionnel et cas d'usage
-- **[📋 Documentation Complète](html/documentation-complete.html)** - Document unifié
+- **[📖 Page d'accueil](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/index.html)** - Interface d'accueil avec navigation
+- **[🏗️ Architecture](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/architecture.html)** - Documentation technique DevOps
+- **[🔌 API Reference](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/api-reference.html)** - Référence des endpoints
+- **[👤 Guide Utilisateur](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/user-guide.html)** - Guide fonctionnel et cas d'usage
+- **[📋 Documentation Complète](https://htmlpreview.github.io/?https://github.com/ClementV78/prompt2prod/blob/main/docs/html/documentation-complete.html)** - Document unifié
 
 ## 🚀 Accès rapide
 
@@ -78,12 +79,12 @@ cd docs/assets
 **Prompt2Prod** démontre une pipeline DevOps complète permettant de transformer une idée exprimée en langage naturel en un projet GitHub déployé et prêt pour la production.
 
 **Technologies showcasées :**
-- OpenHands pour l'orchestration AI
-- KGateway (CNCF) pour le routage intelligent
-- Multi-LLM (Ollama local + OpenRouter cloud)
+- KGateway (CNCF) pour le routage AI unifié
+- Multi-LLM (Ollama local + OpenAI cloud) 
+- Architecture Gateway API moderne
 - Kubernetes avec K3s
-- GitHub Actions CI/CD
-- FastAPI avec documentation automatique
+- FastAPI avec API standardisée
+- Docker multi-stage optimisé
 
 **Valeur ajoutée :**
 - Automatisation complète de la chaîne de valeur
