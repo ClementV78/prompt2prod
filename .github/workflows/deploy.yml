@@ -144,6 +144,7 @@ jobs:
       - name: Deploy Application
         run: |
           echo "📦 Deploying application..."
+          kubectl create namespace prompt2prod --dry-run=client -o yaml | kubectl apply -f -
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
