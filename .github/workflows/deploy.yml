@@ -145,31 +145,51 @@ jobs:
         run: |
           echo "📦 Deploying application..."
           kubectl create namespace prompt2prod --dry-run=client -o yaml | kubectl apply -f -
+
+          # Secret OpenAI (optionnel si besoin)
+          kubectl create secret generic openai-secret \
+            --from-literal=Authorization=${{ secrets.OPENAI_API_KEY }} \
+            -n prompt2prod --dry-run=client -o yaml | kubectl apply -f -
+
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
           kubectl apply -R -f k8s/base/
 
-          # Boucle d'affichage
-          (
-            SECONDS=0
-            while [ $SECONDS -lt 600 ]; do
-              echo "⏳ $(date +%T) - État des pods dans prompt2prod:"
-              kubectl get pods -n prompt2prod -o wide
-              echo "--------------------------------------"
-              sleep 10
-            done
-          ) &
+          # Boucle de surveillance
+          SECONDS=0
+          TIMEOUT=600
+          while [ $SECONDS -lt $TIMEOUT ]; do
+            echo "⏳ $(date +%T) - État des pods dans prompt2prod:"
+            kubectl get pods -n prompt2prod -o wide
+            echo "--------------------------------------"
 
-          # Attente du rollout, avec gestion d'erreur
-          if ! kubectl rollout status deployment/app -n prompt2prod --timeout=10m; then
-            echo "❌ Rollout échoué pour le déploiement app"
-            echo "🔍 Description du déploiement:"
-            kubectl describe deployment app -n prompt2prod || true
-            echo "🔍 Description des pods:"
-            kubectl describe pods -n prompt2prod || true
-            exit 1
-          fi
+            # Vérifie si un pod est en erreur
+            if kubectl get pods -n prompt2prod | grep -E 'Error|CrashLoopBackOff|ImagePullBackOff'; then
+              echo "❌ Un pod est en erreur, debug..."
+              kubectl describe pods -n prompt2prod || true
+              kubectl get events -n prompt2prod --sort-by=.lastTimestamp | tail -20 || true
+              # Récupérer logs du pod en erreur (si possible)
+              for pod in $(kubectl get pods -n prompt2prod --no-headers | grep -E 'Error|CrashLoopBackOff|ImagePullBackOff' | awk '{print $1}'); do
+                echo "🔍 Logs du pod $pod"
+                kubectl logs -n prompt2prod $pod || true
+              done
+              exit 1
+            fi
+
+            # Vérifie si le déploiement est prêt
+            if kubectl rollout status deployment/app -n prompt2prod --timeout=5s; then
+              echo "✅ Déploiement réussi"
+              exit 0
+            fi
+
+            sleep 10
+          done
+
+          echo "⏰ Timeout de $TIMEOUT secondes atteint sans succès du déploiement"
+          kubectl describe deployment app -n prompt2prod || true
+          kubectl describe pods -n prompt2prod || true
+          exit 1
 
       - name: Show Deployment Status
         run: |
