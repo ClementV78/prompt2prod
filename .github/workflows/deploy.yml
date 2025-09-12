@@ -140,6 +140,9 @@ jobs:
           echo "⚙️ Installing KGateway..."
           ./scripts/setup-kgateway.sh
           kubectl wait --for=condition=available --timeout=300s deployment/kgateway -n kgateway-system
+      - name: Create namespace
+        run: |
+          kubectl create namespace prompt2prod --dry-run=client -o yaml | kubectl apply -f -
       - name: Create OpenAI Secret
         run: |
           kubectl create secret generic openai-secret-app \
@@ -148,7 +151,6 @@ jobs:
       - name: Deploy Application
         run: |
           echo "📦 Deploying application..."
-          kubectl create namespace prompt2prod --dry-run=client -o yaml | kubectl apply -f -
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
@@ -158,7 +160,6 @@ jobs:
           SECONDS=0
           TIMEOUT=600
           while [ $SECONDS -lt $TIMEOUT ]; do
-            sleep 10
             echo "⏳ $(date +%T) - État des pods dans prompt2prod:"
             kubectl get pods -n prompt2prod -o wide
             echo "--------------------------------------"
@@ -168,7 +169,6 @@ jobs:
               echo "❌ Un pod est en erreur, debug..."
               kubectl describe pods -n prompt2prod || true
               kubectl get events -n prompt2prod --sort-by=.lastTimestamp | tail -20 || true
-              # Récupérer logs du pod en erreur (si possible)
               for pod in $(kubectl get pods -n prompt2prod --no-headers | grep -E 'Error|CrashLoopBackOff|ImagePullBackOff' | awk '{print $1}'); do
                 echo "🔍 Logs du pod $pod"
                 kubectl logs -n prompt2prod $pod || true
@@ -177,7 +177,7 @@ jobs:
             fi
 
             # Vérifie si le déploiement est prêt
-            if kubectl rollout status deployment/app -n prompt2prod --timeout=5s; then
+            if kubectl rollout status deployment/app -n prompt2prod --timeout=5s >/dev/null 2>&1; then
               echo "✅ Déploiement réussi"
               exit 0
             fi
