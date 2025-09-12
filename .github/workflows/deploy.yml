@@ -139,7 +139,7 @@ jobs:
         run: |
           echo "⚙️ Installing KGateway..."
           ./scripts/setup-kgateway.sh
-          kubectl wait --for=condition=available --timeout=300s deployment/kgateway-controller -n kgateway-system
+          kubectl wait --for=condition=available --timeout=300s deployment/kgateway -n kgateway-system
 
       - name: Deploy Application
         run: |
