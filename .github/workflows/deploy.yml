@@ -113,13 +113,29 @@ jobs:
     needs: build-test
     runs-on: ubuntu-latest
     container:
-      image: rancher/k3s:v1.33.4-k3s1
+      image: rancher/k3s:latest
       options: --privileged
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: Install Node.js and Git
+      - name: Debug OS and Install Node.js and Git
         run: |
-          apk add --no-cache nodejs npm git
+          echo "🔍 Checking OS distribution..."
+          cat /etc/*release || true
+          echo "📦 Checking available package managers..."
+          which apk && echo "✅ apk found" || echo "❌ apk not found"
+          which apt-get && echo "✅ apt-get found" || echo "❌ apt-get not found"
+          
+          # Install based on available package manager
+          if command -v apk >/dev/null 2>&1; then
+            echo "Using apk (Alpine)"
+            apk add --no-cache nodejs npm git
+          elif command -v apt-get >/dev/null 2>&1; then
+            echo "Using apt-get (Debian/Ubuntu)"  
+            apt-get update && apt-get install -y nodejs npm git
+          else
+            echo "❌ No supported package manager found"
+            exit 1
+          fi
           
       - name: Checkout repository
         uses: actions/checkout@v4
