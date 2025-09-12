@@ -149,7 +149,27 @@ jobs:
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
           kubectl apply -R -f k8s/base/
-          kubectl rollout status deployment/app -n prompt2prod --timeout=10m
+
+          # Boucle d'affichage
+          (
+            SECONDS=0
+            while [ $SECONDS -lt 600 ]; do
+              echo "⏳ $(date +%T) - État des pods dans prompt2prod:"
+              kubectl get pods -n prompt2prod -o wide
+              echo "--------------------------------------"
+              sleep 10
+            done
+          ) &
+
+          # Attente du rollout, avec gestion d'erreur
+          if ! kubectl rollout status deployment/app -n prompt2prod --timeout=10m; then
+            echo "❌ Rollout échoué pour le déploiement app"
+            echo "🔍 Description du déploiement:"
+            kubectl describe deployment app -n prompt2prod || true
+            echo "🔍 Description des pods:"
+            kubectl describe pods -n prompt2prod || true
+            exit 1
+          fi
 
       - name: Show Deployment Status
         run: |
