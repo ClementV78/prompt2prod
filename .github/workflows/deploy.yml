@@ -80,8 +80,8 @@ jobs:
           echo "3. Check rollout status:"
           echo "   kubectl rollout status deployment/app -n prompt2prod"
 
-  # COMMENTED OUT: Uncomment this job for self-hosted runner deployment
-  deploy:
+  # Self-hosted runner deployment
+  deploy-self-hosted:
     needs: build-test
     runs-on: self-hosted
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -107,3 +107,55 @@ jobs:
 
           # Show status
           kubectl get pods -n prompt2prod -o wide
+
+  # Codespace deployment with K3s container
+  deploy-codespace:
+    needs: build-test
+    runs-on: ubuntu-latest
+    container:
+      image: rancher/k3s:v1.33.4-k3s1
+      options: --privileged
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start K3s
+        run: |
+          echo "🚀 Starting K3s server..."
+          k3s server --disable traefik --write-kubeconfig-mode 644 &
+          sleep 20
+          
+          # Setup kubectl config
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
+          
+          # Wait for node ready
+          kubectl wait --for=condition=Ready nodes --all --timeout=300s
+          kubectl cluster-info
+
+      - name: Setup KGateway
+        run: |
+          echo "⚙️ Installing KGateway..."
+          ./scripts/setup-kgateway.sh
+          kubectl wait --for=condition=available --timeout=300s deployment/kgateway-controller -n kgateway-system
+
+      - name: Deploy Application
+        run: |
+          echo "📦 Deploying to Codespace K3s..."
+          
+          # Update image tag
+          export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
+          envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
+
+          # Apply manifests
+          kubectl apply -R -f k8s/base/
+
+          # Wait for deployment
+          kubectl rollout status deployment/app -n prompt2prod --timeout=10m
+
+      - name: Show Deployment Status
+        run: |
+          echo "✅ Codespace deployment completed!"
+          kubectl get pods -n prompt2prod -o wide
+          kubectl get services -n prompt2prod
