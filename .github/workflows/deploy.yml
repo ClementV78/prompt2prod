@@ -108,48 +108,33 @@ jobs:
           # Show status
           kubectl get pods -n prompt2prod -o wide
 
-  # Codespace deployment with K3s container
+  # Codespace deployment with K3s container (lightweight Alpine)
   deploy-codespace:
     needs: build-test
     runs-on: ubuntu-latest
     container:
-      image: rancher/k3s:latest
+      image: node:20-alpine
       options: --privileged
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - name: Debug OS and Install Node.js and Git
+      - name: Install Git and Curl
         run: |
-          echo "🔍 Checking OS distribution..."
-          cat /etc/*release || true
-          echo "📦 Checking available package managers..."
-          which apk && echo "✅ apk found" || echo "❌ apk not found"
-          which apt-get && echo "✅ apt-get found" || echo "❌ apt-get not found"
-          
-          # Install based on available package manager
-          if command -v apk >/dev/null 2>&1; then
-            echo "Using apk (Alpine)"
-            apk add --no-cache nodejs npm git
-          elif command -v apt-get >/dev/null 2>&1; then
-            echo "Using apt-get (Debian/Ubuntu)"  
-            apt-get update && apt-get install -y nodejs npm git
-          else
-            echo "❌ No supported package manager found"
-            exit 1
-          fi
-          
+          echo "📦 Installing dependencies..."
+          apk add --no-cache git curl bash
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Start K3s
         run: |
           echo "🚀 Starting K3s server..."
-          k3s server --disable traefik --write-kubeconfig-mode 644 &
+          curl -sfL https://get.k3s.io | sh -s - --disable traefik
           sleep 20
-          
+
           # Setup kubectl config
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
-          
+
           # Wait for node ready
           kubectl wait --for=condition=Ready nodes --all --timeout=300s
           kubectl cluster-info
@@ -163,15 +148,10 @@ jobs:
       - name: Deploy Application
         run: |
           echo "📦 Deploying to Codespace K3s..."
-          
-          # Update image tag
           export IMAGE_TAG="${{ env.REGISTRY }}/${{ env.OWNER_LC }}/prompt2prod:${{ github.sha }}"
           envsubst < k8s/base/app/deployment.yaml | kubectl apply -f -
 
-          # Apply manifests
           kubectl apply -R -f k8s/base/
-
-          # Wait for deployment
           kubectl rollout status deployment/app -n prompt2prod --timeout=10m
 
       - name: Show Deployment Status
