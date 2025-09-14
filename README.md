@@ -188,4 +188,4 @@ MIT
 
 ---
 
-**Note**: Ce projet démontre une architecture DevOps complète intégrant l'IA locale sans dépendances externes payantes.
+**Note**: Ce projet démontre une architecture DevOps complète intégrant l'IA locale sans dépendances externes payantes.# Pipeline Test - dim. 14 sept. 2025 17:03:56 CEST
