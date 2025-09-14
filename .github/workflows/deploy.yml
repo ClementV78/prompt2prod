@@ -30,12 +30,12 @@ jobs:
       - name: Run unit tests
         run: |
           echo "🧪 Running unit tests..."
-          pytest tests/unit/ -v --cov=src --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml
+          PYTHONPATH=. pytest tests/unit/ -v --cov=src --cov-report=term-missing --cov-report=xml --junitxml=test-results.xml
 
       - name: Run security tests
         run: |
           echo "🔒 Running security tests..."
-          pytest tests/security/ -v -m security
+          PYTHONPATH=. pytest tests/security/ -v -m security
 
       - name: Security scan with Bandit
         run: |
@@ -292,7 +292,7 @@ jobs:
           
           # Exécuter les tests d'intégration
           export API_URL="http://localhost:$NODE_PORT"
-          pytest tests/integration/ -v -m integration --tb=short
+          PYTHONPATH=. pytest tests/integration/ -v -m integration --tb=short
           
           echo "✅ Integration tests completed!"
 
