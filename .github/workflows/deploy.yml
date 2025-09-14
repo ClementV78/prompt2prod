@@ -262,17 +262,20 @@ jobs:
         run: |
           echo "🧪 Running integration tests..."
           
-          # Attendre que l'API soit accessible
+          # Attendre que l'API soit accessible via port-forward
+          echo "⏳ Setting up port-forward to API..."
+          kubectl port-forward service/app -n prompt2prod 8080:80 &
+          PORT_FORWARD_PID=$!
+          sleep 5  # Attendre que le port-forward soit établi
+          
           echo "⏳ Waiting for API to be ready..."
           RETRY_COUNT=0
           MAX_RETRIES=30
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}' > /dev/null 2>&1; then
-              NODE_PORT=$(kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}')
-              if curl -f http://localhost:$NODE_PORT/health > /dev/null 2>&1; then
-                echo "✅ API is ready on port $NODE_PORT"
-                break
-              fi
+            if curl -f http://localhost:8080/health > /dev/null 2>&1; then
+              echo "✅ API is ready on port 8080"
+              API_URL="http://localhost:8080"
+              break
             fi
             echo "🔄 Retry $((RETRY_COUNT + 1))/$MAX_RETRIES..."
             sleep 10
@@ -281,8 +284,10 @@ jobs:
           
           if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
             echo "❌ API not accessible after $MAX_RETRIES retries"
+            kubectl get services -n prompt2prod
             kubectl get pods -n prompt2prod
             kubectl logs -n prompt2prod deployment/app --tail=50
+            kill $PORT_FORWARD_PID || true
             exit 1
           fi
           
@@ -291,10 +296,13 @@ jobs:
           pip install pytest pytest-asyncio httpx
           
           # Exécuter les tests d'intégration
-          export API_URL="http://localhost:$NODE_PORT"
+          export API_URL="$API_URL"
           PYTHONPATH=. pytest tests/integration/ -v -m integration --tb=short
           
           echo "✅ Integration tests completed!"
+          
+          # Nettoyer le port-forward
+          kill $PORT_FORWARD_PID || true
 
       - name: Show Deployment Status
         run: |
@@ -302,9 +310,8 @@ jobs:
           kubectl get pods -n prompt2prod -o wide
           kubectl get services -n prompt2prod
           
-          NODE_PORT=$(kubectl get service app -n prompt2prod -o jsonpath='{.spec.ports[0].nodePort}')
-          echo "🌐 API accessible at: http://localhost:$NODE_PORT"
-          echo "📚 Swagger UI: http://localhost:$NODE_PORT/docs"
+          echo "🌐 API accessible via: kubectl port-forward service/app -n prompt2prod 8080:80"
+          echo "📚 Then visit: http://localhost:8080/docs for Swagger UI"
 
       - name: Cleanup cluster
         if: always()
