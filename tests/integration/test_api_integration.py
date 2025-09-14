@@ -15,11 +15,21 @@ class TestAPIIntegration:
     @pytest.fixture(scope="class")
     def api_base_url(self) -> str:
         """URL de base de l'API pour les tests d'intégration"""
-        # En CI/CD avec K3d
+        # Priorité à la variable d'environnement API_URL définie par la pipeline
+        api_url = os.getenv("API_URL")
+        if api_url:
+            print(f"🔍 Using API_URL from environment: {api_url}")
+            return api_url
+        
+        # Fallback : En CI/CD avec K3d (ancien comportement)
         if os.getenv("GITHUB_ACTIONS"):
-            return "http://localhost:31104"
+            fallback_url = "http://localhost:31104"
+            print(f"🔍 Using GitHub Actions fallback: {fallback_url}")
+            return fallback_url
         # En local avec K3s
-        return os.getenv("API_URL", "http://192.168.31.106:31104")
+        fallback_url = "http://192.168.31.106:31104"
+        print(f"🔍 Using local fallback: {fallback_url}")
+        return fallback_url
     
     @pytest.fixture(scope="class") 
     def timeout(self) -> float:
