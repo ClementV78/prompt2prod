@@ -264,26 +264,39 @@ jobs:
           
           # Attendre que l'API soit accessible via port-forward
           echo "⏳ Setting up port-forward to API..."
-          kubectl port-forward service/app -n prompt2prod 8080:80 &
+          kubectl port-forward service/app -n prompt2prod 8080:80 > port-forward.log 2>&1 &
           PORT_FORWARD_PID=$!
-          sleep 5  # Attendre que le port-forward soit établi
+          echo "Port-forward PID: $PORT_FORWARD_PID"
+          
+          # Attendre que le port-forward soit établi
+          sleep 10
+          
+          # Vérifier que le processus port-forward est toujours actif
+          if ! kill -0 $PORT_FORWARD_PID 2>/dev/null; then
+            echo "❌ Port-forward process died, checking logs..."
+            cat port-forward.log
+            exit 1
+          fi
           
           echo "⏳ Waiting for API to be ready..."
           RETRY_COUNT=0
-          MAX_RETRIES=30
+          MAX_RETRIES=20
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             if curl -f http://localhost:8080/health > /dev/null 2>&1; then
               echo "✅ API is ready on port 8080"
               API_URL="http://localhost:8080"
               break
             fi
-            echo "🔄 Retry $((RETRY_COUNT + 1))/$MAX_RETRIES..."
-            sleep 10
+            echo "🔄 Retry $((RETRY_COUNT + 1))/$MAX_RETRIES... (waiting 5s)"
+            sleep 5
             RETRY_COUNT=$((RETRY_COUNT + 1))
           done
           
           if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
             echo "❌ API not accessible after $MAX_RETRIES retries"
+            echo "Port-forward logs:"
+            cat port-forward.log
+            echo "Service status:"
             kubectl get services -n prompt2prod
             kubectl get pods -n prompt2prod
             kubectl logs -n prompt2prod deployment/app --tail=50
@@ -295,9 +308,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-asyncio httpx
           
+          # Vérification finale avant les tests
+          echo "🔍 Final API check before running tests..."
+          curl -v http://localhost:8080/health || echo "Health check failed but continuing..."
+          sleep 2
+          
           # Exécuter les tests d'intégration
           export API_URL="$API_URL"
-          PYTHONPATH=. pytest tests/integration/ -v -m integration --tb=short
+          echo "Running integration tests with API_URL: $API_URL"
+          PYTHONPATH=. pytest tests/integration/ -v -m integration --tb=short -x
           
           echo "✅ Integration tests completed!"
           
